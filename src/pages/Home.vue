@@ -31,13 +31,11 @@
                                 <l-popup>
                                     <div v-if="sensor.type===1">
                                         <h4>{{sensor.position_name}}</h4>
-                                        <div>Pression : {{sensor.pressure}} bar</div>
-                                        <div>Débit : {{sensor.debit}} m3h</div>
-                                        <div>Niveau : {{sensor.level}} mm</div>
+                                        <div>Hauteur de neige : {{sensor.pressure}} mm</div>
+                                        <div>Température du sol : {{sensor.debit}} °C</div>
                                     </div>
                                     <div v-if="sensor.type===2">
                                         <h4>{{sensor.position_name}}</h4>
-                                        <div>Humidité du sol : {{sensor.humidity*100}} %</div>
                                         <div>Température du sol : {{sensor.temp}} °C</div>
                                     </div>
                                 </l-popup>
@@ -51,7 +49,7 @@
                                       @click="lastSeenAntenna(antenna.eui, antenna.id)" :icon="antenna.icon"
                                       :visible="true">
                                 <l-popup>
-                                    <h5>Antenne de {{antenna.position_name}}</h5>
+                                    <h5>{{antenna.position_name}}</h5>
                                     <div>latitude: {{antenna.position[0]}}</div>
                                     <div>longitude: {{antenna.position[1]}}</div>
                                     <div>Vu il y a : {{antenna.lastSeen}} secondes</div>
@@ -132,7 +130,7 @@
                 url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
                 url2: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
                 zoom: 13,
-                center: [46.09019806912501, 7.204499244689942],
+                center: [46.26664685678397, 7.401180267333985],
                 bounds: null,
                 markers: [
                     [46.096715752047594, 7.214045226573945],
@@ -142,85 +140,58 @@
                 sensors: [{
                     type: 1,
                     id: 1,
-                    position_name: 'Ancienne STEP',
+                    position_name: 'Télécabine',
                     pressure: "-",
                     debit: "-",
                     level: "-",
-                    position: [46.096717, 7.214058],
+                    position: [46.29411, 7.39557],
                     icon: this.deviceIcon()
                 }, {
                     type: 1,
                     id: 2,
-                    position_name: 'Le Tarpin',
+                    position_name: 'Pralan',
                     pressure: "-",
                     debit: "-",
                     level: "none",
-                    position: [46.093547, 7.212366],
-                    icon: this.deviceIcon()
-                }, {
-                    type: 1,
-                    id: 3,
-                    position_name: 'Combaynon',
-                    pressure: "-",
-                    debit: "-",
-                    level: "none",
-                    position: [46.098088, 7.213919],
-                    icon: this.deviceIcon()
-                }, {
-                    type: 1,
-                    id: 4,
-                    position_name: 'Réservoir Curala',
-                    pressure: "-",
-                    debit: "-",
-                    level: "none",
-                    position: [46.079062, 7.215399],
+                    position: [46.29894, 7.40549],
                     icon: this.deviceIcon()
                 }, {
                     type: 2,
-                    id: 5,
-                    position_name: 'Terrain M. S',
-                    temp: "- °C",
-                    humidity: "- %",
-                    position: [46.086570, 7.179780],
+                    id: 3,
+                    position_name: 'Pro de Savioz',
+                    pressure: "-",
+                    debit: "-",
+                    level: "none",
+                    position: [46.26721, 7.39827],
                     icon: this.deviceIcon()
                 }],
                 antennas: [{
                     type: 1,
                     id: 1,
-                    position_name: 'STEP',
-                    position: [46.08302000, 7.20260000],
+                    position_name: 'Privée',
+                    position: [46.27141, 7.39897],
                     icon: this.antennaIconDown(),
-                    eui: 'eui-fcc23dfffe0f0c22',
+                    eui: 'eui-fcc23dfffe0f0c22',// need to change into the real eui
                     lastSeen: "-",
                     timeStamp: "",
                     isUp: false,
                 }, {
                     type: 1,
                     id: 2,
-                    position_name: 'Ruinettes',
-                    position: [46.09072000, 7.25180000],
+                    position_name: 'École de Botyre',
+                    position: [46.27731, 7.40595],
                     icon: this.antennaIconDown(),
-                    eui: 'eui-fcc23dfffe0f0c7b',
+                    eui: 'eui-fcc23dfffe0f0c7b', // need to change into the real eui
                     lastSeen: "-",
                     timeStamp: "",
                     isUp: false,
                 }, {
                     type: 1,
                     id: 3,
-                    position_name: 'Bruson',
-                    position: [46.06059000, 7.19409000],
+                    position_name: 'Office du tourisme',
+                    position: [46.29733, 7.40000],
                     icon: this.antennaIconDown(),
-                    eui: 'eui-fcc23dfffe106166',
-                    lastSeen: "-",
-                    timeStamp: "",
-                    isUp: false,
-                }, {
-                    type: 1,
-                    id: 4,
-                    position_name: 'Curala',
-                    position: [46.078594, 7.214584],
-                    icon: this.antennaIconDown(),
-                    eui: 'eui-fcc23dfffe0aaac6',
+                    eui: 'eui-fcc23dfffe106166', // need to change into the real eui
                     lastSeen: "-",
                     timeStamp: "",
                     isUp: false,
@@ -241,6 +212,7 @@
         created() {
             this.checkAntenna();
             this.startTimer();
+            //this.checkDevice();
         },
         mounted() {
 
@@ -251,6 +223,21 @@
             clearInterval(this.timer);
         },
         methods: {
+            // checkDevice(){
+            //     var appID = "altis-irrigation-app";
+            //     var accessKey = "ttn-account-v2.YdStTLbI0FKK9DfIFVo8fYKQdw23ct_WGeVZHWp2F3w";
+            //     console.log("Program running");
+            //
+            //     ttn.data(appID, accessKey).then(function (client) {
+            //         client.devices(function (devices) {
+            //             console.log("Received list of devices")
+            //             console.log(devices)
+            //         })
+            //     })
+            //         .catch(function (error) {
+            //             console.error("Error", error);
+            //         });
+            // },
             toggleStatus(){
                 if (this.showStatus){
                     this.arrow = require('../assets/svg/left_arrow.svg')

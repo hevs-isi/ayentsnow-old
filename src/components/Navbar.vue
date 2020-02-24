@@ -4,7 +4,7 @@
                 <b-navbar-brand>
                     <div>
                         <img class="" src="https://www.hevs.ch/img/logo-hes-so-valais-2019.png" height="50em" >
-                        <img class="pl-4" src="../assets/logo_altis.png" height="50em">
+                        <img class="pl-4" src="../assets/ayent.png" height="50em">
                     </div>
                     <div>
 
@@ -14,28 +14,21 @@
                 <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
                 <b-collapse id="nav-collapse" is-nav>
                     <b-navbar-nav class="ml-auto">
-                        <b-nav-item href="/#/info">
-                            INFO ET CONTACTS
-                        </b-nav-item>
                         <b-nav-item href="/#/">
                             CARTE
                         </b-nav-item>
                         <b-nav-item-dropdown>
                             <!-- Using 'button-content' slot -->
-                            <template slot="button-content">NIVEAU</template>
-                            <b-dropdown-item to="/level">Ancienne STEP</b-dropdown-item>
+                            <template slot="button-content">NEIGE</template>
+                            <b-dropdown-item :to="{ name: 'neige', params: {sensorName: 'measure-v2', sectorName: 'Télécabine' } }">Télécabine</b-dropdown-item>
+                            <b-dropdown-item :to="{ name: 'neige', params: {sensorName: 'measure-v0', sectorName: 'Pralan'  } }">Pralan</b-dropdown-item>
                         </b-nav-item-dropdown>
                         <b-nav-item-dropdown>
                             <!-- Using 'button-content' slot -->
-                            <template slot="button-content">PRESSION ET DÉBIT</template>
-                            <b-dropdown-item :to="{ name: 'pressure', params: {sensorName: 'measure-v2', sectorName: 'Combaynon' } }">Combaynon</b-dropdown-item>
-                            <b-dropdown-item :to="{ name: 'pressure', params: {sensorName: 'measure-v0', sectorName: 'Ancienne STEP'  } }">Ancienne STEP</b-dropdown-item>
-                            <b-dropdown-item :to="{ name: 'pressure', params: {sensorName: 'measure-v4', sectorName: 'Le Tarpin'  } }">Le Tarpin</b-dropdown-item>
-                        </b-nav-item-dropdown>
-                        <b-nav-item-dropdown>
-                            <!-- Using 'button-content' slot -->
-                            <template slot="button-content">HUMIDITÉ</template>
-                            <b-dropdown-item :to="{ name: 'humidity', params: {id: 32 } }">Terrain M. S Vollèges</b-dropdown-item>
+                            <template slot="button-content">TEMPÉRATURE</template>
+                            <b-dropdown-item :to="{ name: 'temperature', params: {sensorName: 'measure-v2', sectorName: 'Télécabine' } }">Télécabine</b-dropdown-item>
+                            <b-dropdown-item :to="{ name: 'temperature', params: {sensorName: 'measure-v0', sectorName: 'Pralan'  } }">Pralan</b-dropdown-item>
+                            <b-dropdown-item :to="{ name: 'temperature', params: {sensorName: 'measure-v0', sectorName: 'Pro de Savioz'  } }">Pro de Savioz</b-dropdown-item>
                         </b-nav-item-dropdown>
 
                     </b-navbar-nav>

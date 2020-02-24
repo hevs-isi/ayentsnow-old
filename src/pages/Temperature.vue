@@ -1,33 +1,51 @@
 <template>
     <div class="level">
-
-        <b-row align-v="center" class="text-center">
-            <b-col sm="2">
-                <div class="mb-4" style="font-size: 130%">Niveau d'eau</div>
-                <img src="../assets/svg/flood.svg" class="my-auto" style="max-width: 50%"/>
-            </b-col>
-            <b-col sm>
-                    <StockChart :data="series_level"/>
-            </b-col>
-            <b-col sm="2">
-                <div class="" style="font-size: 130%">Niveau d'eau</div>
-                <div class="" style="font-size: 200%">{{lastLevelValue}} mm</div>
-            </b-col>
-        </b-row>
-
-        <b-row align-v="center" class="text-center">
-            <b-col>
-                <div class="mb-4" style="font-size: 130%">Niveau de batterie</div>
-                <img src="../assets/svg/battery.svg" class="my-auto" style="max-width: 50%"/>
-            </b-col>
-            <b-col cols="8">
-                <StockChart :data="series_battery"/>
-            </b-col>
-            <b-col>
-                <div class="" style="font-size: 130%">Niveau de batterie</div>
-                <div class="" style="font-size: 200%">{{lastBatteryValue}} V</div>
+        <h3>{{sectorName}}</h3>
+        <b-container class="bv-example-row bv-example-row-flex-cols">
+        <b-row class="m-4" align-h="center">
+            <b-col cols="4">
+                <b-card
+                        border-variant="secondary"
+                        header="Température de la route"
+                        header-border-variant="secondary"
+                        align="center"
+                        class=""
+                >
+                    <b-card-text class="h1">3 °C</b-card-text>
+                </b-card>
             </b-col>
         </b-row>
+        </b-container>
+
+<!--        <b-row align-v="center" class="text-center">-->
+<!--            <b-col sm="2">-->
+<!--                <div class="mb-4" style="font-size: 130%">Niveau d'eau</div>-->
+<!--                <img src="../assets/svg/flood.svg" class="my-auto" style="max-width: 50%"/>-->
+<!--            </b-col>-->
+<!--            <b-col sm>-->
+<!--                    <StockChart :data="series_level"/>-->
+<!--            </b-col>-->
+<!--            <b-col sm="2">-->
+<!--                <div class="" style="font-size: 130%">Niveau d'eau</div>-->
+<!--                <div class="" style="font-size: 200%">{{lastLevelValue}} mm</div>-->
+<!--            </b-col>-->
+<!--        </b-row>-->
+
+<!--        <b-row align-v="center" class="text-center">-->
+<!--            <b-col>-->
+<!--                <div class="mb-4" style="font-size: 130%">Niveau de batterie</div>-->
+<!--                <img src="../assets/svg/battery.svg" class="my-auto" style="max-width: 50%"/>-->
+<!--            </b-col>-->
+<!--            <b-col cols="8">-->
+<!--                <StockChart :data="series_battery"/>-->
+<!--            </b-col>-->
+<!--            <b-col>-->
+<!--                <div class="" style="font-size: 130%">Niveau de batterie</div>-->
+<!--                <div class="" style="font-size: 200%">{{lastBatteryValue}} V</div>-->
+<!--            </b-col>-->
+<!--        </b-row>-->
+
+        <StockChart :data="series_battery"/>
     </div>
 
 </template>
@@ -49,7 +67,7 @@
 
     export default {
         props : [
-            'title_text'
+            'sectorName'
         ],
         name: 'level',
         components: {

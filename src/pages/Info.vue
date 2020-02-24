@@ -9,9 +9,9 @@
                     <img class="ml-3" src="https://www.hevs.ch/img/logo-hes-so-valais-2019.png" height="100em" >
                 </a>
                 <p class="m-3"> en partenariat avec</p>
-                <a href="https://www.altis.swiss/" target="_blank">
-                    <img class="pl-4" src="../assets/logo_altis.png" height="100em">
-                </a>
+<!--                <a href="https://www.altis.swiss/" target="_blank">-->
+<!--                    <img class="pl-4" src="../assets/logo_altis.png" height="100em">-->
+<!--                </a>-->
             </template>
 
             <hr class="my-4">

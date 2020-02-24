@@ -15,7 +15,10 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css';
 import VueResource from 'vue-resource';
-library.add(faUserSecret)
+library.add(faUserSecret);
+import VueResizeText from "vue-resize-text/src/VueResizeText";
+
+
 
 stockInit(Highcharts)
 mapInit(Highcharts)
@@ -26,8 +29,9 @@ Vue.use(BootstrapVue)
 Vue.config.productionTip = true
 Vue.use(NProgress);
 Vue.use(VueResource);
+Vue.use(VueResizeText);
 export const serverBus = new Vue();
-
+//Object.defineProperty(Vue.prototype, '$ttn', { value : ttn});
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
