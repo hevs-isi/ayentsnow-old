@@ -4,6 +4,7 @@ import Router from 'vue-router'
 import home from '../pages/Home'
 import neige from '../pages/Neige'
 import temperature from '../pages/Temperature'
+import contact from '../pages/Contact'
 
 Vue.use(Router)
 const router = new Router({
@@ -24,6 +25,12 @@ const router = new Router({
             name: 'temperature',
             props: true,
             component: temperature
+        },
+        {
+            path: '/contact',
+            name: 'contact',
+            component: contact
+
         },
     ],
 

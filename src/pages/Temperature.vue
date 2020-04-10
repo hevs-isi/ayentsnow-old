@@ -92,7 +92,7 @@
                             turboThreshold:60000,
                             data: arr.map( obj => Object.assign({}, {
                                 x: (moment(obj.time).unix())*1000,
-                                y: obj.DistanceComputed
+                                y: obj['DistanceComputed']
                             }))
                         });
                     });
