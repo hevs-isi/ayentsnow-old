@@ -1,9 +1,10 @@
 <template>
     <div class="info">
         <b-jumbotron>
-            <template v-slot:header>Snowmon</template>
+            <template v-slot:header>Watermon Ayent</template>
 
             <template v-slot:lead>
+                <br>
                 <p>Le projet de monitoring de l'état des routes par la</p>
                 <a href="https://www.hevs.ch/fr/" target="_blank">
                     <img class="ml-3" src="https://www.hevs.ch/img/logo-hes-so-valais-2019.png" height="100em" >
