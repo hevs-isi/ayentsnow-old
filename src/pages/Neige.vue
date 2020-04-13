@@ -10,7 +10,7 @@
                         header-border-variant="secondary"
                         align="center"
                 >
-                    <b-card-text class="h1">20 cm</b-card-text>
+                    <b-card-text class="h1">{{last1h_snow}} cm</b-card-text>
                 </b-card>
             </b-col>
             <b-col>
@@ -20,7 +20,7 @@
                         header-border-variant="secondary"
                         align="center"
                 >
-                    <b-card-text class="h1">24 cm</b-card-text>
+                    <b-card-text class="h1">{{last30min_snow}} cm</b-card-text>
                 </b-card>
             </b-col>
             <b-col>
@@ -30,7 +30,7 @@
                         header-border-variant="secondary"
                         align="center"
                 >
-                    <b-card-text class="h1">29 cm</b-card-text>
+                    <b-card-text class="h1">{{lastSnowValue}} cm</b-card-text>
                 </b-card>
             </b-col>
         </b-row>
@@ -43,41 +43,15 @@
                         align="center"
                 >
                     <b-card-text class="">
-                        <span class="h1 mr-3 align-middle">+ 9 cm</span>
+                        <span class="h1 mr-3 align-middle">{{delta_snow}} cm</span>
                         <img src="../assets/svg/diagonal-arrow-up.svg" style="max-width: 2%" class="align-middle"/>
                     </b-card-text>
                 </b-card>
             </b-col>
         </b-row>
 
-        <StockChart :data="series_level"/>
-<!--        <b-row align-v="center" class="text-center">-->
-<!--            <b-col sm="2">-->
-<!--                <div class="mb-4" style="font-size: 130%">Niveau d'eau</div>-->
-<!--                <img src="../assets/svg/flood.svg" class="my-auto" style="max-width: 50%"/>-->
-<!--            </b-col>-->
-<!--            <b-col sm>-->
-<!--                    <StockChart :data="series_level"/>-->
-<!--            </b-col>-->
-<!--            <b-col sm="2">-->
-<!--                <div class="" style="font-size: 130%">Niveau d'eau</div>-->
-<!--                <div class="" style="font-size: 200%">{{lastLevelValue}} mm</div>-->
-<!--            </b-col>-->
-<!--        </b-row>-->
+        <StockChart :data="series_snow"/>
 
-<!--        <b-row align-v="center" class="text-center">-->
-<!--            <b-col>-->
-<!--                <div class="mb-4" style="font-size: 130%">Niveau de batterie</div>-->
-<!--                <img src="../assets/svg/battery.svg" class="my-auto" style="max-width: 50%"/>-->
-<!--            </b-col>-->
-<!--            <b-col cols="8">-->
-<!--                <StockChart :data="series_battery"/>-->
-<!--            </b-col>-->
-<!--            <b-col>-->
-<!--                <div class="" style="font-size: 130%">Niveau de batterie</div>-->
-<!--                <div class="" style="font-size: 200%">{{lastBatteryValue}} V</div>-->
-<!--            </b-col>-->
-<!--        </b-row>-->
     </div>
 
 </template>
@@ -88,6 +62,8 @@
     import NProgress from 'nprogress'
     import StockChart from '../components/StockChart.vue'
     import credInflux from "../constants/influx";
+
+
 
     const client = new Influx.InfluxDB({
         database: credInflux.database,
@@ -104,75 +80,91 @@
         ],
         name: 'neige',
         components: {
-            //chart: Chart,
+
             StockChart,
         },
         mounted () {
             NProgress.start();
-            this.loadLevelData();
-            this.loadBatteryData();
+            this.loadActualSnowData();
+            this.load30minSnowData();
+            this.load1hSnowData();
+            this.calculate_delta_snow();
+            console.log(this.delta_snow);
+
         },
         methods : {
-            loadLevelData: function() {
+            /**
+             * load actual snow data
+             */
+            loadActualSnowData: function() {
                 Promise.all([
-                    client.query('SELECT "DistanceComputed" FROM "level-sensor-1" WHERE time>now()-365d'),
+                    client.query('SELECT * FROM temperature_cuisine WHERE time>now()-365d' ), // WHERE time>now()-365d
                 ]).then(parsedRes => {
-                    console.log(parsedRes);
                     const mutatedArray = parsedRes.map( arr => {
-                        this.lastLevelValue = arr[arr.length-1]['DistanceComputed'];
+                        this.lastSnowValue = arr[arr.length-1]['temperature'].toFixed(2); //to fixed: fix number of digit
+
                         return Object.assign({}, {
-                            name: "Distance",
+                            name: "temperature",
                             turboThreshold:60000,
                             data: arr.map( obj => Object.assign({}, {
                                 x: (moment(obj.time).unix())*1000,
-                                y: obj.DistanceComputed
+                                y: obj['temperature']
                             }))
                         });
                     });
-                    //console.log(mutatedArray);
-                    this.series_level = mutatedArray;
+                    this.series_snow = mutatedArray;
                     NProgress.done();
-                    //console.log(this.series);
                 }).catch(error => console.log(error))
             },
-            loadBatteryData: function() {
+            /**
+             * load snow data 30min ago
+             */
+            load30minSnowData: function() {
                 Promise.all([
-                    client.query('SELECT "Battery voltage" FROM "level-sensor-1" WHERE time>now()-365d'),
+                    client.query('SELECT * FROM temperature_cuisine WHERE time>now()-30m' ), // WHERE time>now()-365d
                 ]).then(parsedRes => {
-
-                    const mutatedArray = parsedRes.map( arr => {
-                        this.lastBatteryValue = arr[arr.length-1]['Battery voltage'];
-                        return Object.assign({}, {
-                            name: "Niveau de batterie",
-                            turboThreshold:60000,
-                            data: arr.map( obj => Object.assign({}, {
-                                x: (moment(obj.time).unix())*1000,
-                                y: obj['Battery voltage']
-                            }))
-                        });
+                    parsedRes.map( arr => {
+                        this.last30min_snow = arr[arr.length-1]['temperature'].toFixed(2); //to fixed: fix number of digit
                     });
-                    console.log(mutatedArray);
-                    this.series_battery = mutatedArray;
-                    //console.log(this.series_battery);
+                    NProgress.done();
                 }).catch(error => console.log(error))
-            }
+            },
+            /**
+             * load snow data 1hour ago
+             */
+            load1hSnowData: function() {
+                Promise.all([
+                    client.query('SELECT * FROM temperature_cuisine WHERE time>now()-1h' ), // WHERE time>now()-365d
+                ]).then(parsedRes => {
+                    parsedRes.map( arr => {
+                        this.last1h_snow = arr[arr.length-1]['temperature'].toFixed(2); //to fixed: fix number of digit
+                    });
+                    NProgress.done();
+                }).catch(error => console.log(error))
+            },
+
+            /**
+             * calculate the difference in snowfall between now and an hour ago
+             */
+            calculate_delta_snow : function(){
+                this.delta_snow= this.lastSnowValue - this.last1h_snow
+            },
+
         },
         data () {
             return {
-                series_level : [{
+                series_snow : [{
                     name: "",
                     turboThreshold:60000,
                     data: [],
 
                 }],
-                series_battery : [{
-                    name: "",
-                    turboThreshold:60000,
-                    data: [],
 
-                }],
-                lastLevelValue:"",
-                lastBatteryValue:""
+                lastSnowValue:"",
+                last30min_snow:"",
+                last1h_snow:"",
+                delta_snow:"",
+
             }
 
         }
