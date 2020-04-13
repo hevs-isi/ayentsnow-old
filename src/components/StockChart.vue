@@ -9,6 +9,9 @@
         ],
         data () {
             return {
+                time: {
+                  timezone: 'Europe/Bern'
+                },
                 stockOptions: {
                     rangeSelector: {
                         selected: 'all',
