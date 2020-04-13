@@ -1,5 +1,5 @@
 <template>
-    <div class="level">
+    <div class="temperature">
         <h3>{{sectorName}}</h3>
             <b-row align-v="center" class="text-center">
 
@@ -31,6 +31,11 @@
     import NProgress from 'nprogress'
     import StockChart from '../components/StockChart.vue'
     import credInflux from "../constants/influx";
+
+    var newPath;
+
+
+
     const client = new Influx.InfluxDB({
         database: credInflux.database,
         host: credInflux.host,
@@ -49,12 +54,33 @@
             StockChart,
         },
         mounted () {
+            newPath = this.sectorName                               //save the new path to know witch page to load
             NProgress.start();
-            this.loadLevelData();
-            this.loadBatteryData();
+
+            this.refresh(newPath)
+
+            this.loadTemperatureData();
+
         },
         methods : {
-            loadLevelData: function() {
+            /**
+             * function to refresh the page with in function of the sector
+             * refresh only the chart not all the page
+             */
+            refresh: function(page){
+                switch (page.toString().toLowerCase()) {
+                    case "Télécabine":
+                        this.loadTemperatureData();
+                        break;
+                    case "Pralan":
+             //to do : query this sector temperature
+                        break;
+                    case "Pro de Savioz":
+             //to do : query this sector temperature
+                        break;
+                }
+            },
+            loadTemperatureData: function() {
                 Promise.all([
                     client.query('SELECT * FROM temperature_cuisine WHERE time>now()-365d' ), // WHERE time>now()-365d
                 ]).then(parsedRes => {
