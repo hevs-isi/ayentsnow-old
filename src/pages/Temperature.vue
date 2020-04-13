@@ -13,7 +13,7 @@
             </b-col>
 
             <b-col cols="2">
-                <div class = "" style="...">Temperature</div>
+                <div class = "" style="...">Temperature actuelle</div>
                 <div class = "" style="..."> {{lastTemperatureValue}} °C</div>
             </b-col>
         </b-row>
@@ -32,7 +32,7 @@
     import StockChart from '../components/StockChart.vue'
     import credInflux from "../constants/influx";
 
-    var newPath;
+    var newPath;                                                    //new path taken from the URl
 
 
 
@@ -57,7 +57,7 @@
             newPath = this.sectorName                               //save the new path to know witch page to load
             NProgress.start();
 
-            this.refresh(newPath)
+            this.refresh(newPath)                                   //refresh chart if sector name has changed
 
             this.loadTemperatureData();
 
@@ -81,11 +81,13 @@
                 }
             },
             loadTemperatureData: function() {
+
+                
                 Promise.all([
                     client.query('SELECT * FROM temperature_cuisine WHERE time>now()-365d' ), // WHERE time>now()-365d
                 ]).then(parsedRes => {
                     const mutatedArray = parsedRes.map( arr => {
-                        this.lastTemperatureValue = arr[arr.length-1]['temperature'];
+                        this.lastTemperatureValue = arr[arr.length-1]['temperature'].toFixed(2); //to fixed: fix number of digit
 
                         return Object.assign({}, {
                             name: "temperature",
