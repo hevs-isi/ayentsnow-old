@@ -9,12 +9,12 @@
             </b-col>
 
             <b-col sm>
-                <StockChart :data="series_battery"/>
+                <StockChart :data="series_temperature"/>
             </b-col>
 
             <b-col cols="2">
                 <div class = "" style="...">Temperature</div>
-                <div class = "" style="..."> {{lastBatteryValue}} °C</div>
+                <div class = "" style="..."> {{lastTemperatureValue}} °C</div>
             </b-col>
         </b-row>
 
@@ -44,9 +44,8 @@
         props : [
             'sectorName'
         ],
-        name: 'level',
+        name: 'temperature',
         components: {
-            //chart: Chart,
             StockChart,
         },
         mounted () {
@@ -57,67 +56,40 @@
         methods : {
             loadLevelData: function() {
                 Promise.all([
-                    client.query('SELECT "DistanceComputed" FROM "level-sensor-1" WHERE time>now()-365d'),
+                    client.query('SELECT * FROM temperature_cuisine WHERE time>now()-365d' ), // WHERE time>now()-365d
                 ]).then(parsedRes => {
-                    console.log(parsedRes);
                     const mutatedArray = parsedRes.map( arr => {
-                        this.lastLevelValue = arr[arr.length-1]['DistanceComputed'];
+                        this.lastTemperatureValue = arr[arr.length-1]['temperature'];
+
                         return Object.assign({}, {
-                            name: "Distance",
+                            name: "temperature",
                             turboThreshold:60000,
                             data: arr.map( obj => Object.assign({}, {
                                 x: (moment(obj.time).unix())*1000,
-                                y: obj['DistanceComputed']
+                                y: obj['temperature']
                             }))
                         });
                     });
-                    //console.log(mutatedArray);
-                    this.series_level = mutatedArray;
+                    this.series_temperature = mutatedArray;
                     NProgress.done();
-                    //console.log(this.series);
                 }).catch(error => console.log(error))
             },
-            loadBatteryData: function() {
-                Promise.all([
-                    client.query('SELECT "Battery voltage" FROM "level-sensor-1" WHERE time>now()-365d'),
-                ]).then(parsedRes => {
 
-                    const mutatedArray = parsedRes.map( arr => {
-                        this.lastBatteryValue = arr[arr.length-1]['Battery voltage'];
-                        return Object.assign({}, {
-                            name: "Niveau de batterie",
-                            turboThreshold:60000,
-                            data: arr.map( obj => Object.assign({}, {
-                                x: (moment(obj.time).unix())*1000,
-                                y: obj['Battery voltage']
-                            }))
-                        });
-                    });
-                    console.log(mutatedArray);
-                    this.series_battery = mutatedArray;
-                    //console.log(this.series_battery);
-                }).catch(error => console.log(error))
-            }
         },
 
 
 
         data () {
             return {
-                series_level : [{
+
+                series_temperature : [{
                     name: "",
                     turboThreshold:60000,
                     data: [],
 
                 }],
-                series_battery : [{
-                    name: "",
-                    turboThreshold:60000,
-                    data: [],
+                lastTemperatureValue:"",
 
-                }],
-                lastLevelValue:"",
-                lastBatteryValue:""
             }
 
         }
