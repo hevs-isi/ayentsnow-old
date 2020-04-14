@@ -33,10 +33,7 @@
     import credInflux from "../constants/influx";
 
     var newPath;                                                    //new path taken from the URl
-    let myTopic;
-
-    let myQuery;
-
+    var oldPath;
 
     const client = new Influx.InfluxDB({
         database: credInflux.database,
@@ -60,55 +57,58 @@
             console.log("sectorname : " + this.sectorName)
             NProgress.start();
 
-            this.refresh(newPath)                                   //refresh chart if sector name has changed
-
-            myTopic = this.findTopic(newPath)
-            myQuery = 'select payload_fields_test_temp from mqtt_consumer WHERE topic = ' + "'" + myTopic + "'"
-            this.loadTemperatureData(myQuery);
-
+            this.loadTemperatureData(this.createQuery(newPath));
+            oldPath=newPath;
         },
+
+        // done when before the page updated
+        beforeUpdate() {
+            this.reloadPage()                                   // function to reload the page
+        },
+
 
         methods : {
             /**
-             * function to refresh the page with in function of the sector
-             * refresh only the chart not all the page
+             * reload de page when the user switch the room
              */
-            refresh: function(page){
-                switch (page.toString()) {
-                    case "Télécabine":
-                        this.loadTemperatureData();
-                        break;
-                    case "Pralan":
-             //to do : query this sector temperature
-                        break;
-                    case "Pro de Savioz":
-             //to do : query this sector temperature
-                        break;
+            reloadPage : function(){
+                newPath = this.sectorName
+                if(newPath !== oldPath){
+                    console.log("path as changed")
+                    location.reload()
                 }
             },
 
             /**
-             * return the right topic in function of the sectorname
+             * return the query in function of the path (sectorname)
+             * @param page
+             * @returns {string}
              */
-            findTopic : function(page){
-                let returnTopic
+            createQuery : function(page){
+                let returnQuery
                 switch(page.toString()){
                     case "Télécabine":
-                        returnTopic = 'mayentest/devices/id_test_location1/up'
+                        returnQuery = 'select payload_fields_test_temp from mqtt_consumer WHERE topic = ' + "'" + 'mayentest/devices/id_test_location1/up' + "'"
                         break;
                     case "Pralan":
-                        returnTopic = 'mayentest/devices/id_test_location2/up'
+                        returnQuery = 'select payload_fields_test_temp from mqtt_consumer WHERE topic = ' + "'" + 'mayentest/devices/id_test_location2/up' + "'"
                         break;
                     case "Pro de Savioz":
-                        returnTopic = ''
+                        returnQuery = ''
                         break;
                     default :
-                        console.log("findtopic : switch default case")
+                        console.log("returnQuery : switch default case")
                         break;
                 }
 
-                return returnTopic
+                return returnQuery
             },
+
+
+            /**
+             * load data from the database
+             * @param paramQuery
+             */
             loadTemperatureData: function(paramQuery) {
 
                 console.log("query : " + paramQuery)

@@ -100,6 +100,8 @@
         },
 
         methods : {
+
+
             /**
              * load actual snow data
              */
