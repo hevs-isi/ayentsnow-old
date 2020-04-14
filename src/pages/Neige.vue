@@ -54,7 +54,16 @@
             </b-col>
         </b-row>
 
-        <StockChart :data="series_snow"/>
+        <b-row align-v="center" class="text-center">
+            <b-col sm="2">
+                <div class="mb-4" style="font-size: 130%">Hauteur de neige</div>
+                <img src="../assets/svg/snowflake.jpg" class="my-auto" style="max-width: 50%"/>
+            </b-col>
+            <b-col sm>
+                <StockChart :data="series_snow"/>
+            </b-col>
+        </b-row>
+
 
     </div>
 
@@ -67,6 +76,8 @@
     import StockChart from '../components/StockChart.vue'
     import credInflux from "../constants/influx";
 
+    var newPath;                                                    //new path taken from the URl
+    var oldPath;                                                    //old path taken from the URL
 
 
     const client = new Influx.InfluxDB({
@@ -88,11 +99,20 @@
             StockChart,
         },
         mounted () {
+            newPath = this.sectorName
             NProgress.start();
-            this.loadActualSnowData();
-            this.load30minSnowData();
-            this.load1hSnowData();
 
+
+            this.loadActualSnowData(this.createQuery(newPath));
+            this.load30minSnowData(this.createQuery(newPath));
+            this.load1hSnowData(this.createQuery(newPath));
+
+            oldPath=newPath;
+
+        },
+        // done when before the page updated
+        beforeUpdate() {
+            this.reloadPage()                                   // function to reload the page
         },
         updated() {
             this.calculate_delta_snow();
@@ -100,24 +120,58 @@
         },
 
         methods : {
+            /**
+             * reload de page when the user switch the room
+             */
+            reloadPage : function(){
+                newPath = this.sectorName
+                if(newPath !== oldPath){
+                    console.log("path as changed")
+                    location.reload()
+                }
+            },
+            /**
+             * return the query in function of the path (sectorname)
+             * @param page
+             * @returns {string}
+             */
+            createQuery : function(page){
+                let returnQuery
+                switch(page.toString()){
+                    case "Télécabine":
+                        returnQuery = 'select payload_fields_test_neige from mqtt_consumer WHERE topic = ' + "'" + 'mayentest/devices/id_test_location1/up' + "'"
+                        break;
+                    case "Pralan":
+                        returnQuery = 'select payload_fields_test_neige from mqtt_consumer WHERE topic = ' + "'" + 'mayentest/devices/id_test_location2/up' + "'"
+                        break;
 
+                    default :
+                        console.log("returnQuery : switch default case")
+                        break;
+                }
+
+                return returnQuery
+            },
 
             /**
              * load actual snow data
              */
-            loadActualSnowData: function() {
+            loadActualSnowData: function(paramQuery) {
+
+                console.log("query : " + paramQuery)
+
                 Promise.all([
-                    client.query('select payload_fields_test from mqtt_consumer WHERE time>now()-365d' ), //
+                    client.query(paramQuery), //
                 ]).then(parsedRes => {
                     const mutatedArray = parsedRes.map( arr => {
-                        this.lastSnowValue = arr[arr.length-1]['payload_fields_test'].toFixed(2); //to fixed: fix number of digit
+                        this.lastSnowValue = arr[arr.length-1]['payload_fields_test_neige'].toFixed(2); //to fixed: fix number of digit
 
                         return Object.assign({}, {
-                            name: "temperature",
+                            name: "neige",
                             turboThreshold:60000,
                             data: arr.map( obj => Object.assign({}, {
                                 x: (moment(obj.time).unix())*1000,
-                                y: obj['payload_fields_test']
+                                y: obj['payload_fields_test_neige']
                             }))
                         });
                     });
@@ -128,12 +182,12 @@
             /**
              * load snow data 30min ago
              */
-            load30minSnowData: function() {
+            load30minSnowData: function(paramQuery) {
                 Promise.all([
-                    client.query('select payload_fields_test from mqtt_consumer WHERE time>now()-30m order by time asc limit 1' ), // WHERE time>now()-365d
+                    client.query(paramQuery + ' AND time>now()-30m order by time asc limit 1' ), // WHERE time>now()-365d
                 ]).then(parsedRes => {
                     parsedRes.map( arr => {
-                        this.last30min_snow = arr[arr.length-1]['payload_fields_test'].toFixed(2); //to fixed: fix number of digit
+                        this.last30min_snow = arr[arr.length-1]['payload_fields_test_neige'].toFixed(2); //to fixed: fix number of digit
                     });
                     NProgress.done();
                 }).catch(error => console.log(error))
@@ -141,12 +195,12 @@
             /**
              * load snow data 1hour ago
              */
-            load1hSnowData: function() {
+            load1hSnowData: function(paramQuery) {
                 Promise.all([
-                    client.query('select payload_fields_test from mqtt_consumer WHERE time>now()-1h order by time asc limit 1' ), // WHERE time>now()-365d
+                    client.query(paramQuery + ' AND time>now()-1h order by time asc limit 1' ), // WHERE time>now()-365d
                 ]).then(parsedRes => {
                     parsedRes.map( arr => {
-                        this.last1h_snow = arr[arr.length-1]['payload_fields_test'].toFixed(2); //to fixed: fix number of digit
+                        this.last1h_snow = arr[arr.length-1]['payload_fields_test_neige'].toFixed(2); //to fixed: fix number of digit
 
                     });
                     NProgress.done();
@@ -157,7 +211,13 @@
              * calculate the difference in snowfall between now and an hour ago
              */
             calculate_delta_snow : function(){
-                this.delta_snow = this.lastSnowValue - this.last1h_snow
+                if(this.last1h_snow != ""){
+                    this.delta_snow = this.lastSnowValue - this.last1h_snow
+                }else{
+                    this.delta_snow = 0;
+                }
+
+                console.log(this.delta_snow)
             },
 
         },

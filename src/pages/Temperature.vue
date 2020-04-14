@@ -33,7 +33,7 @@
     import credInflux from "../constants/influx";
 
     var newPath;                                                    //new path taken from the URl
-    var oldPath;
+    var oldPath;                                                    //old path taken from the URL
 
     const client = new Influx.InfluxDB({
         database: credInflux.database,
