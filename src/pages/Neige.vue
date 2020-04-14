@@ -10,7 +10,9 @@
                         header-border-variant="secondary"
                         align="center"
                 >
-                    <b-card-text class="h1">{{last1h_snow}} cm</b-card-text>
+                    <b-card-text v-if = "last1h_snow.length != 0" class="h1">{{last1h_snow}} cm</b-card-text>
+                    <b-card-text v-if = "last1h_snow.length == 0" class="h1">{{lastSnowValue}} cm</b-card-text> <!--test if there is a value saved or not -->
+
                 </b-card>
             </b-col>
             <b-col>
@@ -20,7 +22,9 @@
                         header-border-variant="secondary"
                         align="center"
                 >
-                    <b-card-text class="h1">{{last30min_snow}} cm</b-card-text>
+                    <b-card-text v-if = "last30min_snow.length != 0 " class="h1">{{last30min_snow}} cm</b-card-text>
+                    <b-card-text v-if = "last30min_snow.length == 0 " class="h1">{{lastSnowValue}} cm</b-card-text> <!-- test if there is a value saved or not -->
+
                 </b-card>
             </b-col>
             <b-col>
@@ -89,26 +93,30 @@
             this.load30minSnowData();
             this.load1hSnowData();
             this.calculate_delta_snow();
+
+            console.log(this.last1h_snow);
+            console.log(this.lastSnowValue);
             console.log(this.delta_snow);
 
         },
+
         methods : {
             /**
              * load actual snow data
              */
             loadActualSnowData: function() {
                 Promise.all([
-                    client.query('SELECT * FROM temperature_cuisine WHERE time>now()-365d' ), // WHERE time>now()-365d
+                    client.query('select payload_fields_test from mqtt_consumer WHERE time>now()-365d' ), //
                 ]).then(parsedRes => {
                     const mutatedArray = parsedRes.map( arr => {
-                        this.lastSnowValue = arr[arr.length-1]['temperature'].toFixed(2); //to fixed: fix number of digit
+                        this.lastSnowValue = arr[arr.length-1]['payload_fields_test'].toFixed(2); //to fixed: fix number of digit
 
                         return Object.assign({}, {
                             name: "temperature",
                             turboThreshold:60000,
                             data: arr.map( obj => Object.assign({}, {
                                 x: (moment(obj.time).unix())*1000,
-                                y: obj['temperature']
+                                y: obj['payload_fields_test']
                             }))
                         });
                     });
@@ -121,10 +129,10 @@
              */
             load30minSnowData: function() {
                 Promise.all([
-                    client.query('SELECT * FROM temperature_cuisine WHERE time>now()-30m' ), // WHERE time>now()-365d
+                    client.query('select payload_fields_test from mqtt_consumer WHERE time>now()-30m order by time asc limit 1' ), // WHERE time>now()-365d
                 ]).then(parsedRes => {
                     parsedRes.map( arr => {
-                        this.last30min_snow = arr[arr.length-1]['temperature'].toFixed(2); //to fixed: fix number of digit
+                        this.last30min_snow = arr[arr.length-1]['payload_fields_test'].toFixed(2); //to fixed: fix number of digit
                     });
                     NProgress.done();
                 }).catch(error => console.log(error))
@@ -134,10 +142,10 @@
              */
             load1hSnowData: function() {
                 Promise.all([
-                    client.query('SELECT * FROM temperature_cuisine WHERE time>now()-1h' ), // WHERE time>now()-365d
+                    client.query('select payload_fields_test from mqtt_consumer WHERE time>now()-1h order by time asc limit 1' ), // WHERE time>now()-365d
                 ]).then(parsedRes => {
                     parsedRes.map( arr => {
-                        this.last1h_snow = arr[arr.length-1]['temperature'].toFixed(2); //to fixed: fix number of digit
+                        this.last1h_snow = arr[arr.length-1]['payload_fields_test'].toFixed(2); //to fixed: fix number of digit
                     });
                     NProgress.done();
                 }).catch(error => console.log(error))

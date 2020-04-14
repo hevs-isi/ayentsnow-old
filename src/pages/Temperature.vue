@@ -84,17 +84,19 @@
 
                 
                 Promise.all([
-                    client.query('SELECT * FROM temperature_cuisine WHERE time>now()-365d' ), // WHERE time>now()-365d
+                    client.query('select payload_fields_test from mqtt_consumer WHERE time>now()-365d' ), // SELECT * FROM temperature_cuisine WHERE time>now()-365d
                 ]).then(parsedRes => {
                     const mutatedArray = parsedRes.map( arr => {
-                        this.lastTemperatureValue = arr[arr.length-1]['temperature'].toFixed(2); //to fixed: fix number of digit
+                        this.lastTemperatureValue = arr[arr.length-1]['payload_fields_test'].toFixed(2); //to fixed: fix number of digit
+
+                        console.log(mutatedArray)
 
                         return Object.assign({}, {
-                            name: "temperature",
+                            name: "temperature", // name on the chart
                             turboThreshold:60000,
                             data: arr.map( obj => Object.assign({}, {
                                 x: (moment(obj.time).unix())*1000,
-                                y: obj['temperature']
+                                y: obj['payload_fields_test']
                             }))
                         });
                     });
