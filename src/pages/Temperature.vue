@@ -33,7 +33,9 @@
     import credInflux from "../constants/influx";
 
     var newPath;                                                    //new path taken from the URl
+    let myTopic;
 
+    let myQuery;
 
 
     const client = new Influx.InfluxDB({
@@ -55,20 +57,24 @@
         },
         mounted () {
             newPath = this.sectorName                               //save the new path to know witch page to load
+            console.log("sectorname : " + this.sectorName)
             NProgress.start();
 
             this.refresh(newPath)                                   //refresh chart if sector name has changed
 
-            this.loadTemperatureData();
+            myTopic = this.findTopic(newPath)
+            myQuery = 'select payload_fields_test_temp from mqtt_consumer WHERE topic = ' + "'" + myTopic + "'"
+            this.loadTemperatureData(myQuery);
 
         },
+
         methods : {
             /**
              * function to refresh the page with in function of the sector
              * refresh only the chart not all the page
              */
             refresh: function(page){
-                switch (page.toString().toLowerCase()) {
+                switch (page.toString()) {
                     case "Télécabine":
                         this.loadTemperatureData();
                         break;
@@ -80,14 +86,38 @@
                         break;
                 }
             },
-            loadTemperatureData: function() {
 
-                
+            /**
+             * return the right topic in function of the sectorname
+             */
+            findTopic : function(page){
+                let returnTopic
+                switch(page.toString()){
+                    case "Télécabine":
+                        returnTopic = 'mayentest/devices/id_test_location1/up'
+                        break;
+                    case "Pralan":
+                        returnTopic = 'mayentest/devices/id_test_location2/up'
+                        break;
+                    case "Pro de Savioz":
+                        returnTopic = ''
+                        break;
+                    default :
+                        console.log("findtopic : switch default case")
+                        break;
+                }
+
+                return returnTopic
+            },
+            loadTemperatureData: function(paramQuery) {
+
+                console.log("query : " + paramQuery)
+
                 Promise.all([
-                    client.query('select payload_fields_test from mqtt_consumer WHERE time>now()-365d' ), // SELECT * FROM temperature_cuisine WHERE time>now()-365d
+                    client.query(paramQuery),
                 ]).then(parsedRes => {
                     const mutatedArray = parsedRes.map( arr => {
-                        this.lastTemperatureValue = arr[arr.length-1]['payload_fields_test'].toFixed(2); //to fixed: fix number of digit
+                        this.lastTemperatureValue = arr[arr.length-1]['payload_fields_test_temp'].toFixed(2); //to fixed: fix number of digit
 
                         console.log(mutatedArray)
 
@@ -96,7 +126,7 @@
                             turboThreshold:60000,
                             data: arr.map( obj => Object.assign({}, {
                                 x: (moment(obj.time).unix())*1000,
-                                y: obj['payload_fields_test']
+                                y: obj['payload_fields_test_temp']
                             }))
                         });
                     });
