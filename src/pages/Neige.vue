@@ -92,11 +92,10 @@
             this.loadActualSnowData();
             this.load30minSnowData();
             this.load1hSnowData();
-            this.calculate_delta_snow();
 
-            console.log(this.last1h_snow);
-            console.log(this.lastSnowValue);
-            console.log(this.delta_snow);
+        },
+        updated() {
+            this.calculate_delta_snow();
 
         },
 
@@ -146,6 +145,7 @@
                 ]).then(parsedRes => {
                     parsedRes.map( arr => {
                         this.last1h_snow = arr[arr.length-1]['payload_fields_test'].toFixed(2); //to fixed: fix number of digit
+
                     });
                     NProgress.done();
                 }).catch(error => console.log(error))
@@ -155,7 +155,7 @@
              * calculate the difference in snowfall between now and an hour ago
              */
             calculate_delta_snow : function(){
-                this.delta_snow= this.lastSnowValue - this.last1h_snow
+                this.delta_snow = this.lastSnowValue - this.last1h_snow
             },
 
         },
