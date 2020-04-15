@@ -35,6 +35,7 @@
     var newPath;                                                    //new path taken from the URl
     var oldPath;                                                    //old path taken from the URL
 
+
     const client = new Influx.InfluxDB({
         database: credInflux.database,
         host: credInflux.host,
@@ -57,7 +58,7 @@
             console.log("sectorname : " + this.sectorName)
             NProgress.start();
 
-            this.loadTemperatureData(this.createQuery(newPath));
+            this.loadTemperatureData(this.createQueryTemperatureCatpeur(newPath));
             oldPath=newPath;
         },
 
@@ -74,24 +75,26 @@
             reloadPage : function(){
                 newPath = this.sectorName
                 if(newPath !== oldPath){
-                    console.log("path as changed")
+                    console.log(newPath)
                     location.reload()
+                    //this.loadTemperatureData(this.createQuery(newPath));
+
                 }
             },
 
             /**
-             * return the query in function of the path (sectorname)
+             * return the query in function of the path (sectorname) in real life this is the illuminance_value
              * @param page
              * @returns {string}
              */
-            createQuery : function(page){
+            createQueryTemperatureCatpeur : function(page){
                 let returnQuery
                 switch(page.toString()){
                     case "Télécabine":
-                        returnQuery = 'select payload_fields_test_temp from mqtt_consumer WHERE topic = ' + "'" + 'mayentest/devices/id_test_location1/up' + "'"
+                        returnQuery = 'select "payload_fields_Illuminance_value" from mqtt_consumer WHERE topic = ' + "'" + 'ayent_monitoring/devices/ambient_sensor_2/up' + "'"
                         break;
                     case "Pralan":
-                        returnQuery = 'select payload_fields_test_temp from mqtt_consumer WHERE topic = ' + "'" + 'mayentest/devices/id_test_location2/up' + "'"
+                        returnQuery = 'select "payload_fields_Illuminance_value" from mqtt_consumer WHERE topic = ' + "'" + 'ayent_monitoring/devices/70b3d57ba0000bd0/up' + "'"
                         break;
                     case "Pro de Savioz":
                         returnQuery = ''
@@ -117,16 +120,16 @@
                     client.query(paramQuery),
                 ]).then(parsedRes => {
                     const mutatedArray = parsedRes.map( arr => {
-                        this.lastTemperatureValue = arr[arr.length-1]['payload_fields_test_temp'].toFixed(2); //to fixed: fix number of digit
+                        this.lastTemperatureValue = arr[arr.length-1]['payload_fields_Illuminance_value'].toFixed(2)/10; //to fixed: fix number of digit
 
                         console.log(mutatedArray)
 
                         return Object.assign({}, {
-                            name: "temperature", // name on the chart
+                            name: "temperature capteur", // name on the chart
                             turboThreshold:60000,
                             data: arr.map( obj => Object.assign({}, {
                                 x: (moment(obj.time).unix())*1000,
-                                y: obj['payload_fields_test_temp']
+                                y: obj['payload_fields_Illuminance_value']
                             }))
                         });
                     });
