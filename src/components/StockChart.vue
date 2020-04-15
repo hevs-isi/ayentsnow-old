@@ -9,6 +9,7 @@
         ],
         data () {
             return {
+
                 time: {
                   timezone: 'Europe/Bern'
                 },
