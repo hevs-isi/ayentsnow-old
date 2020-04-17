@@ -47,14 +47,8 @@
 
         watch: {
             data (newValue) {
-                console.log("data()")
                 this.stockOptions.series = newValue
-
-
             },
-
-
-
         }
     }
 </script>

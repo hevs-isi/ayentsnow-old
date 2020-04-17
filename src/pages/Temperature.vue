@@ -86,6 +86,7 @@
     var oldPath;                                                    //old path taken from the URL
 
 
+
     const client = new Influx.InfluxDB({
         database: credInflux.database,
         host: credInflux.host,
@@ -320,23 +321,24 @@
              * @param paramQuery
              */
             dualData: function(paramQuery1) {
+                let serie1;
+                let serie2;
 
-                console.log("query : " + paramQuery1)
                 Promise.all([
                     client.query(paramQuery1),
                 ]).then(parsedRes => {
-                    const mutatedArray1 = parsedRes.map( arr => {
+                     serie1 = parsedRes.map( arr => {
                         this.dualValue = arr[arr.length-1]['payload_fields_Illuminance_value'].toFixed(2); //to fixed: fix number of digit
 
 
                         return Object.assign({}, {
 
 
-                            name: "Temperature du sol", // name on the chart
-                            turboThreshold:60000,
-                            tooltip: {
-                                valueSuffix: ' °C'
-                            },
+                        //    name: "Temperature du sol", // name on the chart
+                        //    turboThreshold:60000,
+                        //    tooltip: {
+                        //        valueSuffix: ' °C'
+                        //    },
                             data: arr.map( obj => Object.assign({}, {
                                 x: (moment(obj.time).unix())*1000,
                                 y: obj['payload_fields_Illuminance_value']
@@ -345,16 +347,30 @@
 
                     });
 
+                    console.log("serie1")
+                    console.log(serie1)
+
+                    serie2 = [{
+                        name : 'toto',
+                        type : 'spline',
+                        data :serie1[0].data
+                    }, {
+                        name : 'titi',
+                        type : 'spline',
+                        data :serie1[0].data,
+                    }]
+
+                    console.log("serie2")
+                    console.log(serie2)
 
 
-
-
-
-                    this.series_dual= mutatedArray1
+                    this.series_dual = serie2
 
 
                     NProgress.done();
                 }).catch(error => console.log(error))
+
+
             },
 
 
