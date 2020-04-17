@@ -1,16 +1,20 @@
 <template>
     <highcharts class="stock" :constructor-type="'stockChart'" :options="stockOptions"></highcharts>
+
 </template>
 
 <script>
     export default {
         props : [
-            'data',
+            'dataTemperatureChart',
 
         ],
         data () {
             return {
                 stockOptions: {
+                    title:{
+                      text : "Temperature"
+                    },
                     rangeSelector: {
                         selected: 'all',
                         buttons: [{
@@ -38,7 +42,7 @@
                             text: 'All'
                         }]
                     },
-                    series: this.data,
+                    series: this.dataTemperatureChart,
 
                 }
             }
@@ -46,7 +50,7 @@
 
 
         watch: {
-            data (newValue) {
+            dataTemperatureChart (newValue) {
                 console.log("data()")
                 this.stockOptions.series = newValue
 
