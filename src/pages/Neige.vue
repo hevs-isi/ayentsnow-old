@@ -53,14 +53,14 @@
                 </b-card>
             </b-col>
         </b-row>
-
+        <br><br>
         <b-row align-v="center" class="text-center">
             <b-col sm="2">
                 <div class="mb-4" style="font-size: 130%">Hauteur de neige</div>
                 <img src="../assets/svg/snowflake.jpg" class="my-auto" style="max-width: 50%"/>
             </b-col>
             <b-col sm>
-                <StockChart :data="series_snow"/>
+                <SnowChart :dataSnowChart="series_snow"/>
             </b-col>
         </b-row>
 
@@ -73,8 +73,8 @@
     import Influx from 'influx'
     import moment from 'moment'
     import NProgress from 'nprogress'
-    import StockChart from '../components/StockChart.vue'
     import credInflux from "../constants/influx";
+    import SnowChart from "../components/SnowChart";
 
     var newPath;                                                    //new path taken from the URl
     var oldPath;                                                    //old path taken from the URL
@@ -95,8 +95,8 @@
         ],
         name: 'neige',
         components: {
+            SnowChart,
 
-            StockChart,
         },
         mounted () {
             newPath = this.sectorName

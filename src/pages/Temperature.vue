@@ -83,7 +83,6 @@
     import Influx from 'influx'
     import moment from 'moment'
     import NProgress from 'nprogress'
- //   import StockChart from '../components/StockChart.vue'
     import credInflux from "../constants/influx"
     import TemperatureChart from "../components/TemperatureChart";
     import BatteryChart from "../components/BatteryChart";
@@ -112,7 +111,6 @@
         components: {
             BatteryChart,
             TemperatureChart,
-      //      StockChart,
         },
         mounted () {
             newPath = this.sectorName                               //save the new path to know witch page to load
