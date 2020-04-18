@@ -16,24 +16,25 @@
                       text : "Temperature"
                     },
 
+
                     yAxis: [{ // Primary yAxis
                         title: {
                             text: 'Temperature du sol',
                             style : {
-                                color :  'black'
+                                color :  '#7cb5ec'
                             },
                         },
                         labels: {
                             format: '{value}°C',
                         },
 
-                        opposite : false
+                        opposite : true
 
                     }, { // Secondary yAxis
                         title: {
                             text: 'Temperature du capteur',
                             style:{
-                                color : '#7cb5ec'
+                                color : 'black'
                             },
                         },
                         labels: {
@@ -42,6 +43,7 @@
 
                         opposite: true
                     }],
+
 
 
                     rangeSelector: {
@@ -72,6 +74,19 @@
                         }]
                     },
                     series: this.dataTemperatureChart,
+
+                    legend :{
+                        layout: 'vertical',
+                        align: 'left',
+                        x: 80,
+                        verticalAlign: 'top',
+                        y: 55,
+                        floating: true,
+
+                    },
+
+
+
 
                 }
             }

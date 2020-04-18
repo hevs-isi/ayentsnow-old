@@ -20,6 +20,7 @@ import VueResizeText from "vue-resize-text/src/VueResizeText";
 
 
 
+
 stockInit(Highcharts)
 mapInit(Highcharts)
 addWorldMap(Highcharts)

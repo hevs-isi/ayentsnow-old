@@ -5,13 +5,31 @@
 <script>
     export default {
         props : [
-            'data',
-            'dataSpecific',
+            'dataBatteryChart',
 
         ],
         data () {
             return {
                 stockOptions: {
+                    title:{
+                        text : "Niveau de batterie"
+                    },
+
+
+                    yAxis: [{ // Primary yAxis
+                        title: {
+                            text: 'Niveau de batterie',
+                            style : {
+                                color :  '#7cb5ec'
+                            },
+                        },
+                        labels: {
+                            format: '{value} V',
+                        },
+
+                        opposite : true
+
+                    }],
                     rangeSelector: {
                         selected: 'all',
                         buttons: [{
@@ -39,7 +57,7 @@
                             text: 'All'
                         }]
                     },
-                    series: this.data,
+                    series: this.dataBatteryChart,
 
                 }
             }
@@ -47,22 +65,9 @@
 
 
         watch: {
-            data (newValue) {
-                console.log("data()")
+            dataBatteryChart (newValue) {
                 this.stockOptions.series = newValue
-
-
             },
-            dataSpecific : function(newValueSpecific){
-                console.log("dataspecific()")
-                console.log(newValueSpecific[0])
-
-
-
-            }
-
-
-
         }
     }
 </script>

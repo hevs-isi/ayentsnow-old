@@ -2,6 +2,7 @@
     <div class="temperature">
         <h3>{{sectorName}}</h3>
         <!-- floor temperature -->
+        <!--
         <b-row align-v="center" class="text-center">
 
             <b-col sm="2">
@@ -20,7 +21,9 @@
         </b-row>
 
         <br><br>
+        -->
         <!-- sensor temperature -->
+        <!--
         <b-row align-v="center" class="text-center">
             <b-col sm="2">
                 <div class="mb-4" style="font-size: 130%">Temperature du capteur </div>
@@ -35,40 +38,42 @@
                 <div class = "" style="..."> {{lastTemperatureSensorValue}} °C</div>
             </b-col>
         </b-row>
-
-        <br><br>
-        <!-- Batterie level -->
-        <b-row align-v="center" class="text-center">
-            <b-col sm="2">
-                <div class="mb-4" style="font-size: 130%">Niveau de batterie </div>
-                <img src="../assets/svg/battery.svg" class="my-auto" style="max-width: 50%"/>
-            </b-col>
-            <b-col sm>
-                <StockChart :data="series_battery" />
-            </b-col>
-
-            <b-col cols="2">
-                <div class = "" style="...">Niveau actuel de la batterie</div>
-                <div class = "" style="..."> {{lastTemperatureSensorValue/10}} V</div>
-            </b-col>
-        </b-row>
-
-        <br><br>
-
-
+        -->
         <!-- dual chart-->
+        <br><br>
         <b-row align-v="center" class="text-center">
             <b-col sm="2">
-                <div class="mb-4" style="font-size: 130%">test dual courbe </div>
+                <img src="../assets/svg/temperature.svg" class="my-auto" style="max-width: 50%"/>
             </b-col>
-            <b-col sm>
+            <b-col sm> <!---->
                 <TemperatureChart :dataTemperatureChart="series_dual"/>
             </b-col>
 
             <b-col cols="2">
-
+                <div class = "" style="...">Temperature du capteur : {{dualSensorTemp}} °C</div>
+                <div class = "" style="..." >Temperature du sol : {{dualFloorTemp}} °C</div>
             </b-col>
         </b-row>
+
+        <br><br>
+
+
+        <br><br>
+        <!-- battery -->
+        <b-row align-v="center" class="text-center">
+            <b-col sm="2">
+                <img src="../assets/svg/battery.svg" class="my-auto" style="max-width: 50%"/>
+            </b-col>
+            <b-col sm>
+                <BatteryChart :dataBatteryChart="series_battery" />
+            </b-col>
+            <b-col cols="2">
+                <div class = "" style="...">Niveau actuel de la batterie</div>
+                <div class = "" style="..."> {{lastBatteryValue}} V</div>
+            </b-col>
+        </b-row>
+
+
 
     </div>
 
@@ -78,9 +83,12 @@
     import Influx from 'influx'
     import moment from 'moment'
     import NProgress from 'nprogress'
-    import StockChart from '../components/StockChart.vue'
+ //   import StockChart from '../components/StockChart.vue'
     import credInflux from "../constants/influx"
     import TemperatureChart from "../components/TemperatureChart";
+    import BatteryChart from "../components/BatteryChart";
+
+
 
     var newPath;                                                    //new path taken from the URl
     var oldPath;                                                    //old path taken from the URL
@@ -102,19 +110,22 @@
         ],
         name: 'temperature',
         components: {
+            BatteryChart,
             TemperatureChart,
-            StockChart,
+      //      StockChart,
         },
         mounted () {
             newPath = this.sectorName                               //save the new path to know witch page to load
             console.log("sectorname : " + this.sectorName)
             NProgress.start();
 
-            this.loadTemperatureFloorData(this.createQueryTemperatureFloor(newPath));
-            this.loadBatterySensorData(this.createQueryBattery(newPath));
-            this.loadTemperatureSensorData(this.createQueryTemperatureSensor(newPath));
+  //          this.loadTemperatureFloorData(this.createQueryTemperatureFloor(newPath));
+
+  //          this.loadTemperatureSensorData(this.createQueryTemperatureSensor(newPath));
 
             this.dualData(this.createQueryTemperatureFloor(newPath), this.createQueryTemperatureSensor(newPath))
+            this.loadBatterySensorData(this.createQueryBattery(newPath));
+
 
             oldPath=newPath;
         },
@@ -218,69 +229,69 @@
              * load temperature of the floor data from the database
              * @param paramQuery
              */
-            loadTemperatureFloorData: function(paramQuery) {
-
-                console.log("query : " + paramQuery)
-
-                Promise.all([
-                    client.query(paramQuery),
-                ]).then(parsedRes => {
-                    const mutatedArray = parsedRes.map( arr => {
-                        this.lastTemperatureFloorValue = arr[arr.length-1]['payload_fields_Illuminance_value'].toFixed(2); //to fixed: fix number of digit
-
-
-                        return Object.assign({}, {
-
-                            name: "Temperature au sol", // name on the chart
-                            turboThreshold:60000,
-                            tooltip: {
-                                valueSuffix: ' °C'
-                            },
-                            data: arr.map( obj => Object.assign({}, {
-                                x: (moment(obj.time).unix())*1000,
-                                y: obj['payload_fields_Illuminance_value']
-                            }))
-                        });
-
-                    });
-                    this.series_temperatureFloor = mutatedArray;
-                    NProgress.done();
-                }).catch(error => console.log(error))
-            },
+            // loadTemperatureFloorData: function(paramQuery) {
+            //
+            //     console.log("query : " + paramQuery)
+            //
+            //     Promise.all([
+            //         client.query(paramQuery),
+            //     ]).then(parsedRes => {
+            //         const mutatedArray = parsedRes.map( arr => {
+            //             this.lastTemperatureFloorValue = arr[arr.length-1]['payload_fields_Illuminance_value'].toFixed(2); //to fixed: fix number of digit
+            //
+            //
+            //             return Object.assign({}, {
+            //
+            //                 name: "Temperature au sol", // name on the chart
+            //                 turboThreshold:60000,
+            //                 tooltip: {
+            //                     valueSuffix: ' °C'
+            //                 },
+            //                 data: arr.map( obj => Object.assign({}, {
+            //                     x: (moment(obj.time).unix())*1000,
+            //                     y: obj['payload_fields_Illuminance_value']
+            //                 }))
+            //             });
+            //
+            //         });
+            //         this.series_temperatureFloor = mutatedArray;
+            //         NProgress.done();
+            //     }).catch(error => console.log(error))
+            // },
 
             /**
              * load temperature of the sensor data from the database
              * @param paramQuery
              */
-            loadTemperatureSensorData: function(paramQuery) {
-
-                console.log("query : " + paramQuery)
-
-                Promise.all([
-                    client.query(paramQuery),
-                ]).then(parsedRes => {
-                    const mutatedArray = parsedRes.map( arr => {
-                        this.lastTemperatureSensorValue = arr[arr.length-1]['payload_fields_Air temperature_value'].toFixed(2); //to fixed: fix number of digit
-
-
-                        return Object.assign({}, {
-
-                            name: "Temperature sensor", // name on the chart
-                            turboThreshold:60000,
-                            tooltip: {
-                                valueSuffix: ' °C'
-                            },
-                            data: arr.map( obj => Object.assign({}, {
-                                x: (moment(obj.time).unix())*1000,
-                                y: obj['payload_fields_Air temperature_value']
-                            }))
-                        });
-
-                    });
-                    this.series_temperatureSensor = mutatedArray;
-                    NProgress.done();
-                }).catch(error => console.log(error))
-            },
+            // loadTemperatureSensorData: function(paramQuery) {
+            //
+            //     console.log("query : " + paramQuery)
+            //
+            //     Promise.all([
+            //         client.query(paramQuery),
+            //     ]).then(parsedRes => {
+            //         const mutatedArray = parsedRes.map( arr => {
+            //             this.lastTemperatureSensorValue = arr[arr.length-1]['payload_fields_Air temperature_value'].toFixed(2); //to fixed: fix number of digit
+            //
+            //
+            //             return Object.assign({}, {
+            //
+            //                 name: "Temperature sensor", // name on the chart
+            //                 turboThreshold:60000,
+            //                 tooltip: {
+            //                     valueSuffix: ' °C'
+            //                 },
+            //                 data: arr.map( obj => Object.assign({}, {
+            //                     x: (moment(obj.time).unix())*1000,
+            //                     y: obj['payload_fields_Air temperature_value']
+            //                 }))
+            //             });
+            //
+            //         });
+            //         this.series_temperatureSensor = mutatedArray;
+            //         NProgress.done();
+            //     }).catch(error => console.log(error))
+            // },
 
             /**
              * load Battery data from the database
@@ -311,8 +322,15 @@
 
                     });
                     this.series_battery = mutatedArray;
+
                     NProgress.done();
                 }).catch(error => console.log(error))
+
+
+
+
+
+
             },
 
 
@@ -329,7 +347,7 @@
                     client.query(paramQuery1),
                 ]).then(parsedRes => {
                      serie1 = parsedRes.map( arr => {
-                        this.dualValue1 = arr[arr.length-1]['payload_fields_Illuminance_value'].toFixed(2); //to fixed: fix number of digit
+                        this.dualFloorTemp = arr[arr.length-1]['payload_fields_Illuminance_value'].toFixed(2); //to fixed: fix number of digit
 
                         return Object.assign({}, {
                             data: arr.map( obj => Object.assign({}, {
@@ -345,7 +363,7 @@
                         client.query(paramQuerry2),
                     ]).then(parsedRes => {
                         serie2 = parsedRes.map( arr => {
-                            this.dualValue2 = arr[arr.length-1]['payload_fields_Air temperature_value'].toFixed(2); //to fixed: fix number of digit
+                            this.dualSensorTemp = arr[arr.length-1]['payload_fields_Air temperature_value'].toFixed(2); //to fixed: fix number of digit
 
                             return Object.assign({}, {
                                 data: arr.map( obj => Object.assign({}, {
@@ -389,20 +407,19 @@
             return {
 
 
-                series_temperatureFloor : [{
-                  //  turboThreshold:60000,
-                    data: [],
+                //series_temperatureFloor : [{
+                //    turboThreshold:60000,
+                //    data: [],
 
-                }],
+                //}],
 
-                series_temperatureSensor: [{
-                   // turboThreshold:60000,
-                    data: [],
+                //series_temperatureSensor: [{
+                //    turboThreshold:60000,
+                //    data: [],
 
-                }],
+                //}],
 
                 series_battery : [{
-                  //  turboThreshold:60000,
                     data: [],
 
                 }],
@@ -414,12 +431,13 @@
                 lastTemperatureSensorValue:"",
                 lastBatteryValue:"",
 
+
                 series_dual:[{
                     data: [],
                 }],
 
-                dualValue1:"",
-                dualValue2:"",
+                dualFloorTemp:"",
+                dualSensorTemp:"",
 
 
 
