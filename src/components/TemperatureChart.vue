@@ -15,6 +15,35 @@
                     title:{
                       text : "Temperature"
                     },
+
+                    yAxis: [{ // Primary yAxis
+                        title: {
+                            text: 'Temperature du sol',
+                            style : {
+                                color :  'black'
+                            },
+                        },
+                        labels: {
+                            format: '{value}°C',
+                        },
+
+                        opposite : false
+
+                    }, { // Secondary yAxis
+                        title: {
+                            text: 'Temperature du capteur',
+                            style:{
+                                color : '#7cb5ec'
+                            },
+                        },
+                        labels: {
+                            format: '{value} °C',
+                        },
+
+                        opposite: true
+                    }],
+
+
                     rangeSelector: {
                         selected: 'all',
                         buttons: [{

@@ -114,7 +114,7 @@
             this.loadBatterySensorData(this.createQueryBattery(newPath));
             this.loadTemperatureSensorData(this.createQueryTemperatureSensor(newPath));
 
-            this.dualData(this.createQueryTemperatureFloor(newPath))
+            this.dualData(this.createQueryTemperatureFloor(newPath), this.createQueryTemperatureSensor(newPath))
 
             oldPath=newPath;
         },
@@ -320,25 +320,18 @@
              * load Battery data from the database
              * @param paramQuery
              */
-            dualData: function(paramQuery1) {
+            dualData: function(paramQuery1,paramQuerry2) {
                 let serie1;
                 let serie2;
+
 
                 Promise.all([
                     client.query(paramQuery1),
                 ]).then(parsedRes => {
                      serie1 = parsedRes.map( arr => {
-                        this.dualValue = arr[arr.length-1]['payload_fields_Illuminance_value'].toFixed(2); //to fixed: fix number of digit
-
+                        this.dualValue1 = arr[arr.length-1]['payload_fields_Illuminance_value'].toFixed(2); //to fixed: fix number of digit
 
                         return Object.assign({}, {
-
-
-                        //    name: "Temperature du sol", // name on the chart
-                        //    turboThreshold:60000,
-                        //    tooltip: {
-                        //        valueSuffix: ' °C'
-                        //    },
                             data: arr.map( obj => Object.assign({}, {
                                 x: (moment(obj.time).unix())*1000,
                                 y: obj['payload_fields_Illuminance_value']
@@ -347,33 +340,45 @@
 
                     });
 
-                    console.log("serie1")
-                    console.log(serie1)
 
-                    serie2 = [{
-                        name : 'toto',
-                        type : 'spline',
-                        data :serie1[0].data
-                    }, {
-                        name : 'titi',
-                        type : 'spline',
-                        data :serie1[0].data,
-                    }]
+                    Promise.all([
+                        client.query(paramQuerry2),
+                    ]).then(parsedRes => {
+                        serie2 = parsedRes.map( arr => {
+                            this.dualValue2 = arr[arr.length-1]['payload_fields_Air temperature_value'].toFixed(2); //to fixed: fix number of digit
 
-                    console.log("serie2")
-                    console.log(serie2)
+                            return Object.assign({}, {
+                                data: arr.map( obj => Object.assign({}, {
+                                    x: (moment(obj.time).unix())*1000,
+                                    y: obj['payload_fields_Air temperature_value']
+                                }))
+                            });
 
-
-                    this.series_dual = serie2
+                        });
 
 
-                    NProgress.done();
+
+                        console.log(serie2)
+                        let serieFinal = [{
+                                name : 'temperature du sol',
+                                type : 'spline',
+                                data : serie1[0].data
+                        },{
+                            name : 'temperature du capteur',
+                            type : 'spline',
+                            data :serie2[0].data,
+                        }]
+
+
+
+                        this.series_dual = serieFinal
+
+                        NProgress.done();
+
+                    }).catch(error => console.log(error))
+
                 }).catch(error => console.log(error))
-
-
             },
-
-
         },
 
 
@@ -413,7 +418,8 @@
                     data: [],
                 }],
 
-                dualValue:"",
+                dualValue1:"",
+                dualValue2:"",
 
 
 
