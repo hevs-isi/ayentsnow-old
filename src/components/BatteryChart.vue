@@ -14,6 +14,11 @@
                     title:{
                         text : "Niveau de batterie"
                     },
+                    chart:{
+                        style:{
+                            fontFamily: 'Roboto'
+                        }
+                    },
 
 
                     yAxis: [{ // Primary yAxis

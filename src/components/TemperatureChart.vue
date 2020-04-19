@@ -1,5 +1,5 @@
 <template>
-    <highcharts class="stock" :constructor-type="'stockChart'" :options="stockOptions"></highcharts>
+    <highcharts class="stock" :constructor-type="'stockChart'" :options="stockOptions" id="temperaturechart"></highcharts>
 
 </template>
 
@@ -16,6 +16,11 @@
                       text : "Temperature"
                     },
 
+                    chart:{
+                      style:{
+                          fontFamily: 'Roboto'
+                      }
+                    },
 
                     yAxis: [{ // Primary yAxis
                         title: {
@@ -109,6 +114,8 @@
 <style scoped>
     .stock {
         width: 70%;
-        margin: 0 auto
+        margin: 0 auto;
     }
+
+
 </style>

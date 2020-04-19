@@ -15,6 +15,11 @@
                     title:{
                         text : "Hauteur de neige"
                     },
+                    chart:{
+                        style:{
+                            fontFamily: 'Roboto'
+                        }
+                    },
 
                     yAxis: [{ // Primary yAxis
                         title: {
