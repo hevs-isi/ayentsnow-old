@@ -6,7 +6,7 @@
                 <transition name="slide">
                 <b-col>
                     <l-map
-                            style="height: 850px;width: 100%"
+                            style="height: 900px;width: 100%"
                             :zoom="zoom"
                             :center="center"
                             @update:zoom="zoomUpdated"
@@ -18,8 +18,8 @@
                         <l-control-layers ref="control"
                                           :sort-layers="true"
                         />
-                        <l-tile-layer :url="url2" name="Carte" layer-type="base" />
-                        <l-tile-layer :url="url" name="Satellite" layer-type="base" />
+                        <l-tile-layer :url="url" name="Satellite" layer-type="base" />                               //change url by url2 and it display first satellite
+                        <l-tile-layer :url="url2" name="Carte" layer-type="base" />                                 //change url2 by url and it display first carte
 
                         <l-layer-group
                                 layer-type="overlay"
@@ -41,13 +41,16 @@
                                 </l-popup>
                             </l-marker>
                         </l-layer-group>
+
                         <l-layer-group
                                 layer-type="overlay"
                                 name="Antennes"
                                 :visible="true">
-                            <l-marker v-for="(antenna,index) in antennas" :lat-lng="antenna.position" :key="index + 100"
+
+                            <l-marker  v-for="(antenna,index) in antennas" :lat-lng="antenna.position" :key="index + 100"
                                       @click="lastSeenAntenna(antenna.eui, antenna.id)" :icon="antenna.icon"
                                       :visible="true">
+
                                 <l-popup>
                                     <h5>{{antenna.position_name}}</h5>
                                     <div>latitude: {{antenna.position[0]}}</div>
@@ -59,7 +62,10 @@
                     </l-map>
                 </b-col>
                 </transition>
-                <b-button squared variant="outline-secondary" @click="toggleStatus" style="height: fit-content; align-self: center"><img :src="arrow" /></b-button>
+
+                <!--Button Status--> <!-- delete layer group to see the button-->
+
+                <b-button   squared variant="null" @click="toggleStatus" style="height: fit-content; align-self: center"><img :src="arrow" /></b-button>
                 <transition name="slide">
                 <b-col v-if="showStatus" cols="3" class="align-self-center">
                     <b-card>
@@ -68,7 +74,7 @@
                             <pre>Prochain test dans {{seconds}} secondes...</pre>
                             <div class="">
                                 <div v-for="(antenna, index) in antennas" :key="index+200">
-                                    <div v-if="antenna.isUp">
+  <!-- antena is up-->                  <div v-if="antenna.isUp">
                                         <p class="text-left">> {{antenna.position_name}}</p>
                                         <pre class="text-left">     <span style="color: green">OK</span> </pre>
                                     </div>
@@ -84,11 +90,14 @@
                     </b-card>
                 </b-col>
                 </transition>
+
             </b-row>
         </b-container>
     </div>
 
 </template>
+
+
 <script>
     import {LMap, LTileLayer, LMarker, LPopup, LControlLayers, LLayerGroup} from 'vue2-leaflet'
     import Influx from 'influx'
@@ -123,7 +132,7 @@
         data() {
             return {
                 arrow: require('../assets/svg/left_arrow.svg'),
-                showStatus:false,
+                showStatus:false,                                                                                       //right button to show antenna status
                 timer: null,
                 timerIsRunning: false,
                 seconds: 30,
@@ -428,6 +437,8 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
     @import "../../node_modules/leaflet/dist/leaflet.css";
+
+
 
     .lucida h1 {
         font-family: "Lucida Console", "Lucida Sans Typewriter", monaco, "Bitstream Vera Sans Mono", monospace;
