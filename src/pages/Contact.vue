@@ -1,5 +1,5 @@
 <template>
-    <div class="info">
+    <div class="info" id="contact">
         <b-jumbotron>
             <template v-slot:header>Watermon Ayent</template>
 
@@ -25,7 +25,7 @@
                 <p> 1950 Sion 2</p>
                 <br>
                 <p> +41 (0)58 606 85 11</p>
-                <p> info@hevs.ch </p>
+                <p> pierre-andre.mudry@hevs.ch </p>
 
                 <br><br>
 
@@ -60,5 +60,8 @@
 </script>
 
 <style scoped>
+    #contact {
+        font-family: Roboto;
+    }
 
 </style>

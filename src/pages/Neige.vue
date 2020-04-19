@@ -1,5 +1,5 @@
 <template>
-    <div class="neige">
+    <div class="neige" id="neige">
         <h3>{{sectorName}}</h3>
 
         <b-row class="m-4">
@@ -69,6 +69,12 @@
     </div>
 
 </template>
+<style scoped>
+    #neige {
+        font-family: Roboto;
+    }
+
+</style>
 
 <script>
     import Influx from 'influx'

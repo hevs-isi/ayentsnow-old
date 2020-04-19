@@ -67,5 +67,6 @@
 <style scoped>
     #navbar {
         background-color: #B8B8B8;
+        font-family: Roboto;
     }
 </style>

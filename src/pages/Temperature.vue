@@ -1,5 +1,5 @@
 <template>
-    <div class="temperature">
+    <div class="temperature" id="temperature">
         <h3>{{sectorName}}</h3>
         <!-- floor temperature -->
         <!--
@@ -78,7 +78,12 @@
     </div>
 
 </template>
+<style scoped>
+    #temperature {
+        font-family: Roboto;
+    }
 
+</style>
 <script>
     import Influx from 'influx'
     import moment from 'moment'
