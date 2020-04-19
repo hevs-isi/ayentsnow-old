@@ -56,13 +56,14 @@
         <br><br>
         <b-row align-v="center" class="text-center">
             <b-col sm="2">
-                <div class="mb-4" style="font-size: 130%">Hauteur de neige</div>
                 <img src="../assets/svg/snowflake.jpg" class="my-auto" style="max-width: 50%"/>
             </b-col>
             <b-col sm>
                 <SnowChart :dataSnowChart="series_snow"/>
             </b-col>
+            <b-col sm="2"></b-col>
         </b-row>
+
 
 
     </div>
@@ -192,7 +193,8 @@
                     parsedRes.map( arr => {
                         this.last30min_snow = arr[arr.length-1]['payload_fields_test_neige'].toFixed(2); //to fixed: fix number of digit
                     });
-                    NProgress.done();
+
+                    console.log(this.last30min_snow)
                 }).catch(error => console.log(error))
             },
             /**

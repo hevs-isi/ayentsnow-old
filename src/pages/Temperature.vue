@@ -89,6 +89,7 @@
 
 
 
+
     var newPath;                                                    //new path taken from the URl
     var oldPath;                                                    //old path taken from the URL
 
@@ -333,7 +334,7 @@
 
 
             /**
-             * load Battery data from the database
+             * load temperature floor AND temperature Sencor data from the database
              * @param paramQuery
              */
             dualData: function(paramQuery1,paramQuerry2) {
@@ -372,17 +373,17 @@
 
                         });
 
-
-
-                        console.log(serie2)
+                        //build final objet to send to chart
                         let serieFinal = [{
                                 name : 'temperature du sol',
                                 type : 'spline',
+                                turboThreshold:60000,           // if no data displayed : augmented it
                                 data : serie1[0].data
                         },{
-                            name : 'temperature du capteur',
-                            type : 'spline',
-                            data :serie2[0].data,
+                                name : 'temperature du capteur',
+                                type : 'spline',
+                                turboThreshold:60000,           // if no data displayed : augmented it
+                                data :serie2[0].data,
                         }]
 
 
@@ -418,6 +419,7 @@
                 //}],
 
                 series_battery : [{
+                    turboThreshold: 60000,
                     data: [],
 
                 }],
@@ -442,13 +444,6 @@
             }
 
         },
-
-
-
-
-
-
-
 
     }
 

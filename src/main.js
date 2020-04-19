@@ -26,6 +26,7 @@ mapInit(Highcharts)
 addWorldMap(Highcharts)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.use(HighchartsVue)
+
 Vue.use(BootstrapVue)
 Vue.config.productionTip = true
 Vue.use(NProgress);
