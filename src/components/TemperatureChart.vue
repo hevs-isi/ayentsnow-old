@@ -81,11 +81,12 @@
                     series: this.dataTemperatureChart,
 
                     legend :{
+                        enabled : true,
                         layout: 'vertical',
                         align: 'left',
-                        x: 80,
+                        x: 30,
                         verticalAlign: 'top',
-                        y: 55,
+                        y: 65,
                         floating: true,
 
                     },

@@ -177,7 +177,7 @@
                         this.lastSnowValue = arr[arr.length-1]['payload_fields_Air humidity_value'].toFixed(2); //to fixed: fix number of digit
 
                         return Object.assign({}, {
-                            name: "neige",
+                            name: "Hauteur de neige",
                             turboThreshold:60000,
                             data: arr.map( obj => Object.assign({}, {
                                 x: (moment(obj.time).unix())*1000,

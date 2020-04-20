@@ -64,6 +64,17 @@
                     },
                     series: this.dataBatteryChart,
 
+                    legend :{
+                        enabled : true,
+                        layout: 'vertical',
+                        align: 'left',
+                        x: 30,
+                        verticalAlign: 'top',
+                        y: 65,
+                        floating: true,
+
+                    },
+
                 }
             }
         },

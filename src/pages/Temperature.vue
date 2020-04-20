@@ -380,12 +380,12 @@
 
                         //build final objet to send to chart
                         let serieFinal = [{
-                                name : 'temperature du sol',
+                                name : 'Temperature du sol',
                                 type : 'spline',
                                 turboThreshold:60000,           // if no data displayed : augmented it
                                 data : serie1[0].data
                         },{
-                                name : 'temperature du capteur',
+                                name : 'Temperature du capteur',
                                 type : 'spline',
                                 turboThreshold:60000,           // if no data displayed : augmented it
                                 data :serie2[0].data,
