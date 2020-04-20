@@ -101,7 +101,6 @@
 
         watch: {
             dataTemperatureChart (newValue) {
-                console.log("data()")
                 this.stockOptions.series = newValue
 
 

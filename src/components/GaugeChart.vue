@@ -1,7 +1,9 @@
 <template>
-    <highcharts class="gauge" :constructor-type="'solidgauge'" :options="gaugeOptions"></highcharts>
+    <highcharts class="solid-gauge" :constructor-type="'solidgauge'" :options="gaugeOptions"></highcharts>
 </template>
 
+<script src="https://code.highcharts.com/highcharts-more.js"></script>
+<script src="https://code.highcharts.com/modules/solid-gauge.js"></script>
 
 <script>
 
@@ -45,6 +47,9 @@
                             [0.5, '#DDDF0D'], // yellow
                             [0.9, '#DF5353'] // red
                         ],
+                        min : 0,
+                        max : 5,
+
                         lineWidth: 0,
                         tickWidth: 0,
                         minorTickInterval: null,
@@ -78,7 +83,8 @@
                             valueSuffix: ' km/h'
                         }
 
-                    }]
+                    }],
+
 
                 }
             }
@@ -88,7 +94,7 @@
 
 </script>
 <style scoped>
-    .stock {
+    .solid-gauge {
         width: 70%;
         margin: 0 auto
     }

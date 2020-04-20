@@ -48,8 +48,12 @@
                 >
                     <b-card-text class="">
                         <span class="h1 mr-3 align-middle">{{delta_snow}} cm</span>
-                        <img v-if = "last1h_snow <= delta_snow " src="../assets/svg/diagonal-arrow-up.svg" style="max-width: 2%" class="align-middle"/>
-                        <img v-if = "last1h_snow > delta_snow " src="../assets/svg/diagonal-arrow-down.svg" style="max-width: 2%" class="align-middle"/>
+
+                        <img v-if = "delta_snow < 0 " src="../assets/svg/diagonal-arrow-down.svg" style="max-width: 2%" class="align-middle"/>
+                       <!-- <span  v-if = "delta_snow < 0 " class="h1 mr-3 align-middle">down </span> -->
+
+                        <img v-if = "delta_snow > 0 " src="../assets/svg/diagonal-arrow-up.svg" style="max-width: 2%" class="align-middle"/>
+                       <!-- <span v-if = "delta_snow > 0 " class="h1 mr-3 align-middle">up </span> -->
 
                     </b-card-text>
                 </b-card>

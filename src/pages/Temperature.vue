@@ -74,7 +74,7 @@
         </b-row>
 
         <!-- battery gauge -->
-         <!--    <b-row align-v="center" class="text-center">
+         <!--   <b-row align-v="center" class="text-center">
                  <b-col sm="2">
                      <img src="../assets/svg/battery.svg" class="my-auto" style="max-width: 50%"/>
                  </b-col>
@@ -86,7 +86,7 @@
                      <div class = "" style="..."> {{lastBatteryValue}} V</div>
                  </b-col>
              </b-row>
-            -->
+-->
 
 
          </div>
@@ -131,7 +131,7 @@
              ],
              name: 'temperature',
              components: {
-   //              GaugeChart,
+  //               GaugeChart,
                  BatteryChart,
                  TemperatureChart,
              },
