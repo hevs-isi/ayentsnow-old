@@ -18,8 +18,8 @@
                         <l-control-layers ref="control"
                                           :sort-layers="true"
                         />
-                        <l-tile-layer :url="url" name="Satellite" layer-type="base" />                               //change url by url2 and it display first satellite
-                        <l-tile-layer :url="url2" name="Carte" layer-type="base" />                                 //change url2 by url and it display first carte
+                        <l-tile-layer :url="url2" name="Carte" layer-type="base" />                               //change url by url2 and it display first satellite
+                        <l-tile-layer :url="url" name="Satellite" layer-type="base" />                                 //change url2 by url and it display first carte
 
                         <l-layer-group
                                 layer-type="overlay"

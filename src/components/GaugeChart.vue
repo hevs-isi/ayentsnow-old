@@ -1,21 +1,18 @@
 <template>
-    <highcharts class="stock" :constructor-type="'chart'" :options="gaugeOptions"></highcharts>
+    <highcharts class="gauge" :constructor-type="'solidgauge'" :options="gaugeOptions"></highcharts>
 </template>
 
 
 <script>
 
     export default {
-        props : [
-            'dataGaugeChart',
 
-
-        ],
-        data () {
+        data() {
             return {
                 gaugeOptions: {
                     chart: {
-                        type: 'solidgauge'
+                        type: 'solidgauge',
+                        enabled : true
                     },
 
                     title: null,
@@ -26,7 +23,7 @@
                         startAngle: -90,
                         endAngle: 90,
                         background: {
-                            backgroundColor:'red',
+                            backgroundColor: 'red',
                             innerRadius: '60%',
                             outerRadius: '100%',
                             shape: 'arc'
@@ -60,24 +57,35 @@
                         }
                     },
 
+                    credits: {
+                        enabled: true
+                    },
+                    //  series: this.dataGaugeChart,
 
 
+                    series: [{
+                        name: 'Speed',
+                        type : 'gauge',
+                        data: [80],
+                        dataLabels: {
+                            format:
+                                '<div style="text-align:center">' +
+                                '<span style="font-size:25px">{y}</span><br/>' +
+                                '<span style="font-size:12px;opacity:0.4">km/h</span>' +
+                                '</div>'
+                        },
+                        tooltip: {
+                            valueSuffix: ' km/h'
+                        }
 
-                    series: this.dataGaugeChart,
+                    }]
 
                 }
             }
-        },
 
-
-        watch: {
-            dataGaugeChart (newValue) {
-                console.log("gauge new value")
-                console.log(newValue)
-                this.gaugeOptions.series = newValue
-            },
         }
     }
+
 </script>
 <style scoped>
     .stock {

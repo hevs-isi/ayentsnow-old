@@ -20,7 +20,6 @@ import VueResizeText from "vue-resize-text/src/VueResizeText";
 
 
 
-
 stockInit(Highcharts)
 mapInit(Highcharts)
 addWorldMap(Highcharts)
@@ -32,6 +31,8 @@ Vue.config.productionTip = true
 Vue.use(NProgress);
 Vue.use(VueResource);
 Vue.use(VueResizeText);
+
+
 export const serverBus = new Vue();
 //Object.defineProperty(Vue.prototype, '$ttn', { value : ttn});
 /* eslint-disable no-new */

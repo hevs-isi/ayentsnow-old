@@ -11,7 +11,7 @@
                         align="center"
                 >
                     <b-card-text v-if = "last1h_snow.length != 0" class="h1">{{last1h_snow}} cm</b-card-text>
-                    <b-card-text v-if = "last1h_snow.length == 0" class="h1">{{lastSnowValue}} cm</b-card-text> <!--test if there is a value saved or not -->
+                    <b-card-text v-if = "last1h_snow.length == 0" class="h1" >{{lastSnowValue}} cm</b-card-text> <!--test if there is a value saved or not -->
 
                 </b-card>
             </b-col>
@@ -22,8 +22,8 @@
                         header-border-variant="secondary"
                         align="center"
                 >
-                    <b-card-text v-if = "last30min_snow.length != 0 " class="h1">{{last30min_snow}} cm</b-card-text>
-                    <b-card-text v-if = "last30min_snow.length == 0 " class="h1">{{lastSnowValue}} cm</b-card-text> <!-- test if there is a value saved or not -->
+                    <b-card-text v-if = "last30min_snow.length != 0 " class="h1" >{{last30min_snow}} cm</b-card-text>
+                    <b-card-text v-if = "last30min_snow.length == 0 " class="h1" >{{lastSnowValue}} cm</b-card-text> <!-- test if there is a value saved or not -->
 
                 </b-card>
             </b-col>
@@ -48,7 +48,9 @@
                 >
                     <b-card-text class="">
                         <span class="h1 mr-3 align-middle">{{delta_snow}} cm</span>
-                        <img src="../assets/svg/diagonal-arrow-up.svg" style="max-width: 2%" class="align-middle"/>
+                        <img v-if = "last1h_snow <= delta_snow " src="../assets/svg/diagonal-arrow-up.svg" style="max-width: 2%" class="align-middle"/>
+                        <img v-if = "last1h_snow > delta_snow " src="../assets/svg/diagonal-arrow-down.svg" style="max-width: 2%" class="align-middle"/>
+
                     </b-card-text>
                 </b-card>
             </b-col>
@@ -168,6 +170,7 @@
              */
             loadActualSnowData: function(paramQuery) {
 
+                console.log("paramQuerry actual")
                 console.log("query : " + paramQuery)
 
                 Promise.all([
@@ -193,11 +196,14 @@
              * load snow data 30min ago
              */
             load30minSnowData: function(paramQuery) {
+                console.log("paramQuerry 30min")
+                console.log("query : " + paramQuery+ ' AND time>now()-30m order by time asc limit 1')
+
                 Promise.all([
                     client.query(paramQuery + ' AND time>now()-30m order by time asc limit 1' ), // WHERE time>now()-365d
                 ]).then(parsedRes => {
                     parsedRes.map( arr => {
-                        this.last30min_snow = arr[arr.length-1]['payload_fields_test_neige'].toFixed(2); //to fixed: fix number of digit
+                        this.last30min_snow = arr[arr.length-1]['payload_fields_Air humidity_value'].toFixed(2); //to fixed: fix number of digit
                     });
 
                     console.log(this.last30min_snow)
@@ -207,11 +213,13 @@
              * load snow data 1hour ago
              */
             load1hSnowData: function(paramQuery) {
+                console.log("paramQuerry 1h")
+                console.log("query : " + paramQuery + ' AND time>now()-1h order by time asc limit 1')
                 Promise.all([
                     client.query(paramQuery + ' AND time>now()-1h order by time asc limit 1' ), // WHERE time>now()-365d
                 ]).then(parsedRes => {
                     parsedRes.map( arr => {
-                        this.last1h_snow = arr[arr.length-1]['payload_fields_test_neige'].toFixed(2); //to fixed: fix number of digit
+                        this.last1h_snow = arr[arr.length-1]['payload_fields_Air humidity_value'].toFixed(2); //to fixed: fix number of digit
 
                     });
                     NProgress.done();
@@ -223,7 +231,7 @@
              */
             calculate_delta_snow : function(){
                 if(this.last1h_snow != ""){
-                    this.delta_snow = this.lastSnowValue - this.last1h_snow
+                    this.delta_snow = (this.lastSnowValue - this.last1h_snow).toFixed(2)
                 }else{
                     this.delta_snow = 0;
                 }
