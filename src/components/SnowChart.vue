@@ -25,7 +25,7 @@
                         title: {
                             text: 'Hauteur de neige',
                             style : {
-                                color :  '#7cb5ec'
+                                color :  '#4285f4'
                             },
                         },
                         labels: {

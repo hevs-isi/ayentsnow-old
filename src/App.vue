@@ -22,11 +22,12 @@
   import Navbar from './components/Navbar.vue'
   import Snow from 'vue-niege';
   /** import {serverBus} from "../src/main";*/
+
   export default {
     name: 'App',
     components: {
       Navbar,
-      Snow
+      Snow,
 
 
     },

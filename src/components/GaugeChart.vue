@@ -1,101 +1,96 @@
 <template>
-    <highcharts class="solid-gauge" :constructor-type="'solidgauge'" :options="gaugeOptions"></highcharts>
+    <highcharts class="gauge" :constructor-type="'chart'" :options="gaugeOptions"></highcharts>
 </template>
 
-<script src="https://code.highcharts.com/highcharts-more.js"></script>
-<script src="https://code.highcharts.com/modules/solid-gauge.js"></script>
+
 
 <script>
 
     export default {
+        props : [
+            'dataGaugeChart',
 
+        ],
         data() {
             return {
                 gaugeOptions: {
                     chart: {
                         type: 'solidgauge',
-                        enabled : true
+
                     },
 
-                    title: null,
+                   title : null,
 
                     pane: {
-                        center: ['50%', '85%'],
-                        size: '140%',
+                        center: ['50%', '75%'],
+                        size: '100%',
                         startAngle: -90,
                         endAngle: 90,
                         background: {
-                            backgroundColor: 'red',
+
                             innerRadius: '60%',
                             outerRadius: '100%',
                             shape: 'arc'
                         }
                     },
 
-                    exporting: {
-                        enabled: false
-                    },
-
                     tooltip: {
-                        enabled: false
+                        enabled: true
                     },
 
-                    // the value axis
                     yAxis: {
                         stops: [
-                            [0.1, '#55BF3B'], // green
+                            [0.1, '#DF5353'], // green 55BF3B
                             [0.5, '#DDDF0D'], // yellow
-                            [0.9, '#DF5353'] // red
+                            [0.9, '#55BF3B'] // red DF5353
                         ],
                         min : 0,
-                        max : 5,
-
+                        max : 3,
                         lineWidth: 0,
                         tickWidth: 0,
                         minorTickInterval: null,
                         tickAmount: 2,
-                        title: {
-                            y: -70
-                        },
-                        labels: {
-                            y: 16
-                        }
+
+
                     },
 
-                    credits: {
-                        enabled: true
+                    credits : false,
+
+                    exporting: {
+                        enabled: false
                     },
-                    //  series: this.dataGaugeChart,
-
-
                     series: [{
-                        name: 'Speed',
-                        type : 'gauge',
-                        data: [80],
+                        name: 'Batterie',
+                        data: [],
                         dataLabels: {
                             format:
                                 '<div style="text-align:center">' +
-                                '<span style="font-size:25px">{y}</span><br/>' +
-                                '<span style="font-size:12px;opacity:0.4">km/h</span>' +
+                                '{y} V' +
                                 '</div>'
                         },
                         tooltip: {
-                            valueSuffix: ' km/h'
+                            valueSuffix: ' V'
                         }
-
-                    }],
+                    }]
 
 
                 }
             }
 
+        },
+
+        watch: {
+            dataGaugeChart(newValue) {
+
+                this.gaugeOptions.series[0].data = [newValue]
+
+
+            },
         }
+
     }
 
 </script>
 <style scoped>
-    .solid-gauge {
-        width: 70%;
-        margin: 0 auto
-    }
+
 </style>

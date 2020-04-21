@@ -55,7 +55,7 @@
             </b-col>
         </b-row>
 
-        <br><br>
+
 
 
         <br><br>
@@ -68,25 +68,24 @@
                 <BatteryChart :dataBatteryChart="series_battery" />
             </b-col>
             <b-col cols="2">
-                <div class = "" style="...">Niveau actuel de la batterie</div>
-                <div class = "" style="..."> {{lastBatteryValue}} V</div>
+                <GaugeChart  :dataGaugeChart="parseFloat(lastBatteryValue)"/>
             </b-col>
         </b-row>
 
         <!-- battery gauge -->
-         <!--   <b-row align-v="center" class="text-center">
-                 <b-col sm="2">
-                     <img src="../assets/svg/battery.svg" class="my-auto" style="max-width: 50%"/>
-                 </b-col>
-                 <b-col sm>
-                     <GaugeChart  />
-                 </b-col>
-                 <b-col cols="2">
-                     <div class = "" style="...">Niveau actuel de la batterie</div>
-                     <div class = "" style="..."> {{lastBatteryValue}} V</div>
-                 </b-col>
-             </b-row>
--->
+<!--            <b-row align-v="center" class="text-center">-->
+<!--                 <b-col sm="2">-->
+<!--                     <img src="../assets/svg/battery.svg" class="my-auto" style="max-width: 50%"/>-->
+<!--                 </b-col>-->
+<!--                 <b-col sm>-->
+<!--                     <GaugeChart  :dataGaugeChart="parseFloat(lastBatteryValue)"/>-->
+<!--                 </b-col>-->
+<!--                 <b-col cols="2">-->
+<!--                     <div class = "" style="...">Niveau actuel de la batterie</div>-->
+<!--                     <div class = "" style="..."> {{lastBatteryValue}} V</div>-->
+<!--                 </b-col>-->
+<!--             </b-row>-->
+
 
 
          </div>
@@ -106,9 +105,18 @@
          import credInflux from "../constants/influx"
          import TemperatureChart from "../components/TemperatureChart";
          import BatteryChart from "../components/BatteryChart";
- //        import GaugeChart from "../components/GaugeChart";
+         import GaugeChart from "../components/GaugeChart";
 
 
+         import exportingInit from "highcharts/modules/exporting";
+
+         import ChartModuleMore from 'highcharts/highcharts-more';
+         import HCSolidGauge from 'highcharts/modules/solid-gauge'
+         import Highcharts from "highcharts";
+
+         exportingInit(Highcharts);
+         ChartModuleMore(Highcharts);
+         HCSolidGauge(Highcharts);
 
 
          var newPath;                                                    //new path taken from the URl
@@ -131,7 +139,7 @@
              ],
              name: 'temperature',
              components: {
-  //               GaugeChart,
+                 GaugeChart,
                  BatteryChart,
                  TemperatureChart,
              },
@@ -331,6 +339,7 @@
                              return Object.assign({}, {
 
                                  name: "Niveau de batterie", // name on the chart
+
                                  turboThreshold:60000,
                                  tooltip: {
                                      valueSuffix: ' V'
@@ -348,15 +357,11 @@
                      }).catch(error => console.log(error))
 
 
-
-
-
-
                  },
 
 
                  /**
-                  * load temperature floor AND temperature Sencor data from the database
+                  * load temperature floor AND temperature Sensor data from the database
                   * @param paramQuery
                   */
                  dualData: function(paramQuery1,paramQuerry2) {
@@ -398,11 +403,13 @@
                              //build final objet to send to chart
                              let serieFinal = [{
                                      name : 'Temperature du sol',
+                                     color : '#4285f4', //bleu
                                      type : 'spline',
                                      turboThreshold:60000,           // if no data displayed : augmented it
                                      data : serie1[0].data
                              },{
                                      name : 'Temperature du capteur',
+                                     color : '#f4b400', //orange
                                      type : 'spline',
                                      turboThreshold:60000,           // if no data displayed : augmented it
                                      data :serie2[0].data,
@@ -445,6 +452,7 @@
                          data: [],
 
                      }],
+
 
 
 

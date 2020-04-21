@@ -62,12 +62,15 @@
         <br><br>
         <b-row align-v="center" class="text-center">
             <b-col sm="2">
-                <img src="../assets/svg/snowflake.jpg" class="my-auto" style="max-width: 50%"/>
+                <img src="../assets/svg/snowflake2.jpg" class="my-auto" style="max-width: 50%"/>
             </b-col>
             <b-col sm>
                 <SnowChart :dataSnowChart="series_snow"/>
             </b-col>
-            <b-col sm="2"></b-col>
+            <b-col sm="2">
+                <img src="../assets/svg/snowflake2.jpg" class="my-auto" style="max-width: 50%"/>
+            </b-col>
+
         </b-row>
 
 
@@ -185,6 +188,7 @@
 
                         return Object.assign({}, {
                             name: "Hauteur de neige",
+                            color : '#4285f4',
                             turboThreshold:60000,
                             data: arr.map( obj => Object.assign({}, {
                                 x: (moment(obj.time).unix())*1000,

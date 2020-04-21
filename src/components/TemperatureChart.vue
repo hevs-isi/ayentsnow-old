@@ -26,7 +26,7 @@
                         title: {
                             text: 'Temperature du sol',
                             style : {
-                                color :  '#7cb5ec'
+                                color :  '#4285f4'
                             },
                         },
                         labels: {
@@ -39,7 +39,7 @@
                         title: {
                             text: 'Temperature du capteur',
                             style:{
-                                color : 'black'
+                                color : '#f4b400'
                             },
                         },
                         labels: {
