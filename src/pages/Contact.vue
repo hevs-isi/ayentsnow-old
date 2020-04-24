@@ -1,7 +1,7 @@
 <template>
     <div class="info" id="contact">
         <b-jumbotron>
-            <template v-slot:header>Watermon Ayent</template>
+            <template v-slot:header>Ayent Snow</template>
 
             <template v-slot:lead>
                 <br>
@@ -39,9 +39,17 @@
                     indicators
                     class="w-75 m-auto"
             >
-                <b-carousel-slide img-src="https://www.anzere.ch/data/images/accroches/Rando/170730_ot_anzere_bisse_ayent_420.jpg" />
-                <b-carousel-slide img-src="https://i.ytimg.com/vi/QJUn4BME06Y/maxresdefault.jpg" />
-                <b-carousel-slide img-src="https://www.valais.ch/media/cache/single_image/a/activity-suonen_ayent_anzere_1.jpg" />
+
+                <b-carousel-slide img-src="https://www.anzere.ch/data/images/accroches/Rando/170730_ot_anzere_bisse_ayent_420.jpg">
+                    <h3> source : ayent.ch</h3>
+                </b-carousel-slide>
+                <b-carousel-slide img-src="https://www.ayent.ch/data/images/galeries/villages/La-Place.jpg">
+                    <h3> source : ayent.ch</h3>
+                </b-carousel-slide>
+                <b-carousel-slide img-src="https://www.anzere.ch/data/images/accroches/Rando/171019_ot_anzere_rawyl_025_m.jpg" >
+                    <h3> source : anzere.ch</h3>
+                </b-carousel-slide>
+
             </b-carousel>
         </b-jumbotron>
     </div>

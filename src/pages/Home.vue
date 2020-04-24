@@ -44,18 +44,21 @@
 
                         <l-layer-group
                                 layer-type="overlay"
-                                name="Antennes"
+                                name="Antennes "
                                 :visible="true">
 
+                            <!-- in downAntennas -->
                             <l-marker  v-for="(antenna,index) in antennas" :lat-lng="antenna.position" :key="index + 100"
                                       @click="lastSeenAntenna(antenna.eui, antenna.id)" :icon="antenna.icon"
                                       :visible="true">
 
                                 <l-popup>
-                                    <h5>{{antenna.position_name}}</h5>
-                                    <div>latitude: {{antenna.position[0]}}</div>
-                                    <div>longitude: {{antenna.position[1]}}</div>
-                                    <div>Vu il y a : {{antenna.lastSeen}} secondes</div>
+
+                                        <h5>{{antenna.position_name}}</h5>
+                                        <div>latitude: {{antenna.position[0]}}</div>
+                                        <div>longitude: {{antenna.position[1]}}</div>
+                                        <div>Vu il y a : {{antenna.lastSeen}} secondes</div>
+
                                 </l-popup>
                             </l-marker>
                         </l-layer-group>
@@ -105,6 +108,7 @@
     import L from 'leaflet'
     import axios from 'axios'
     import credInflux from '../constants/influx'
+
 
 
     delete Icon.Default.prototype._getIconUrl;
@@ -216,12 +220,15 @@
                     isUp: false,
                 }],
                 response: "",
+                downAntennas:[],
             }
         },
         created() {
             this.checkAntenna();
+    //        this.activeGateways();
             this.startTimer();
-            //this.checkDevice();
+            this.checkDevice();
+
         },
         mounted() {
 
@@ -232,7 +239,7 @@
             clearInterval(this.timer);
         },
         methods: {
-            // checkDevice(){
+            checkDevice(){
             //     var appID = "altis-irrigation-app";
             //     var accessKey = "ttn-account-v2.YdStTLbI0FKK9DfIFVo8fYKQdw23ct_WGeVZHWp2F3w";
             //     console.log("Program running");
@@ -246,7 +253,7 @@
             //         .catch(function (error) {
             //             console.error("Error", error);
             //         });
-            // },
+             },
             toggleStatus(){
                 if (this.showStatus){
                     this.arrow = require('../assets/svg/left_arrow.svg')
@@ -268,6 +275,7 @@
                 if (this.seconds <= 0) {
                     this.seconds = 30;
                     this.checkAntenna();
+
                 }
                 else if (this.seconds < 31) {
                     this.seconds--;
@@ -419,16 +427,40 @@
                         if (this.secondBetweenDate(now, timestamp) < 60) {
                             this.antennas[i].icon = this.antennaIconUp();
                             this.antennas[i].isUp = true;
+                            console.log("check antenna : up")
+
                         } else {
                             this.antennas[i].icon = this.antennaIconDown();
                             this.antennas[i].isUp = false;
+                            console.log("check antenna : down")
+                            this.downGateways(i)
                         }
+
                     });
+
                 }
+
 
             },
             secondBetweenDate(date1, date2) {
                 return Math.ceil(Math.abs(date1 - date2) / 1000);
+            },
+
+            downGateways(i){
+
+                console.log("activeGateways, home.vue l 436")
+
+                        this.downAntennas[i] = this.antennas[i]
+                        console.log(i)
+                        console.log(this.antennas[i].isUp)
+
+                console.log("active")
+                for (let j = 0; j < this.downAntennas.length; j++) {
+
+                    console.log(j)
+                    console.log(this.downAntennas[j])
+                }
+
             }
 
         },
