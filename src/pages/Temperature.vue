@@ -373,7 +373,7 @@
                          client.query(paramQuery1),
                      ]).then(parsedRes => {
                           serie1 = parsedRes.map( arr => {
-                             this.dualFloorTemp = arr[arr.length-1]['payload_fields_Illuminance_value'].toFixed(2); //to fixed: fix number of digit
+                             this.dualFloorTemp = arr[arr.length-1]['payload_fields_Illuminance_value'].toFixed(2); // temperature sol
 
                              return Object.assign({}, {
                                  data: arr.map( obj => Object.assign({}, {
@@ -389,7 +389,7 @@
                              client.query(paramQuerry2),
                          ]).then(parsedRes => {
                              serie2 = parsedRes.map( arr => {
-                                 this.dualSensorTemp = arr[arr.length-1]['payload_fields_Air temperature_value'].toFixed(2); //to fixed: fix number of digit
+                                 this.dualSensorTemp = arr[arr.length-1]['payload_fields_Air temperature_value'].toFixed(2); //temperature capteur
 
                                  return Object.assign({}, {
                                      data: arr.map( obj => Object.assign({}, {

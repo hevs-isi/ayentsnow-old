@@ -15,6 +15,7 @@
                             @click="printPosition"
                             class="leaflet-control-layers-list"
                     >
+
                         <l-control-layers ref="control"
                                           :sort-layers="true"
                         />
@@ -62,6 +63,18 @@
                                 </l-popup>
                             </l-marker>
                         </l-layer-group>
+
+     <!-- Test add button up right for antennas status-->
+                        <l-layer-group
+                                layer-type="overlay"
+                                name="Status antennes "
+                                :visible="true">
+
+
+
+                        </l-layer-group>
+     <!-- Test add button up right for antennas status-->
+
                     </l-map>
                 </b-col>
                 </transition>
@@ -70,7 +83,8 @@
 
                 <b-button   squared variant="null" @click="toggleStatus" style="height: fit-content; align-self: center"><img :src="arrow" /></b-button>
                 <transition name="slide">
-                <b-col v-if="showStatus" cols="3" class="align-self-center">
+
+                    <b-col v-if="showStatus" cols="3" class="align-self-center">
                     <b-card>
                         <div class="lucida">
                             <h1>Status antennes</h1>
@@ -92,7 +106,7 @@
                         </div>
                     </b-card>
                 </b-col>
-                </transition>
+               </transition>
 
             </b-row>
         </b-container>
