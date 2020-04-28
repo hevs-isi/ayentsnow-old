@@ -19,13 +19,14 @@
                         <l-control-layers ref="control"
                                           :sort-layers="true"
                         />
-                        <l-tile-layer :url="url2" name="Carte" layer-type="base" />                               //change url by url2 and it display first satellite
-                        <l-tile-layer :url="url" name="Satellite" layer-type="base" />                                 //change url2 by url and it display first carte
+                        <l-tile-layer :url="url" name="Satellite" layer-type="base" />                         <!--change url by url2 and it display first satellite -->
+                        <l-tile-layer :url="url2" name="carte" layer-type="base" />                            <!--change url2 by url and it display first carte -->
 
                         <l-layer-group
                                 layer-type="overlay"
                                 name="Capteurs"
                                 :visible="true"
+
                                 >
                             <l-marker v-for="(sensor,index) in sensors" :lat-lng="sensor.position" :key="index + 10"
                                       @click="loadData(sensor.id)" :icon="sensor.icon" :visible="true">
@@ -53,7 +54,7 @@
                                       @click="lastSeenAntenna(antenna.eui, antenna.id)" :icon="antenna.icon"
                                       :visible="true">
 
-                                <l-popup>
+                                <l-popup v-if="antenna.isUp == true">
 
                                         <h5>{{antenna.position_name}}</h5>
                                         <div>latitude: {{antenna.position[0]}}</div>
@@ -61,19 +62,16 @@
                                         <div>Vu il y a : {{antenna.lastSeen}} secondes</div>
 
                                 </l-popup>
+                                <l-popup v-else>
+                                        <h5>{{antenna.position_name}}</h5>
+                                        <div>latitude: {{antenna.position[0]}}</div>
+                                        <div>longitude: {{antenna.position[1]}}</div>
+                                        <div> DOWN depuis {{antenna.timestamp}}</div>
+
+                                </l-popup>
                             </l-marker>
                         </l-layer-group>
 
-     <!-- Test add button up right for antennas status-->
-                        <l-layer-group
-                                layer-type="overlay"
-                                name="Status antennes "
-                                :visible="true">
-
-
-
-                        </l-layer-group>
-     <!-- Test add button up right for antennas status-->
 
                     </l-map>
                 </b-col>
@@ -81,7 +79,7 @@
 
                 <!--Button Status--> <!-- delete layer group to see the button-->
 
-                <b-button   squared variant="null" @click="toggleStatus" style="height: fit-content; align-self: center"><img :src="arrow" /></b-button>
+ <!--               <b-button   squared variant="null" @click="toggleStatus" style="height: fit-content; align-self: center"><img :src="arrow" /></b-button>
                 <transition name="slide">
 
                     <b-col v-if="showStatus" cols="3" class="align-self-center">
@@ -91,7 +89,7 @@
                             <pre>Prochain test dans {{seconds}} secondes...</pre>
                             <div class="">
                                 <div v-for="(antenna, index) in antennas" :key="index+200">
-  <!-- antena is up-->                  <div v-if="antenna.isUp">
+                                          <div v-if="antenna.isUp">
                                         <p class="text-left">> {{antenna.position_name}}</p>
                                         <pre class="text-left">     <span style="color: green">OK</span> </pre>
                                     </div>
@@ -106,7 +104,7 @@
                         </div>
                     </b-card>
                 </b-col>
-               </transition>
+               </transition> -->
 
             </b-row>
         </b-container>
