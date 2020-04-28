@@ -6,7 +6,7 @@
                 <transition name="slide">
                 <b-col>
                     <l-map
-                            style="height: 900px;width: 100%"
+                            style="height: 880px;width: 100%"
                             :zoom="zoom"
                             :center="center"
                             @update:zoom="zoomUpdated"
@@ -14,11 +14,13 @@
                             @update:bounds="boundsUpdated"
                             @click="printPosition"
                             class="leaflet-control-layers-list"
+
                     >
 
                         <l-control-layers ref="control"
                                           :sort-layers="true"
                         />
+
                         <l-tile-layer :url="url" name="Satellite" layer-type="base" />                         <!--change url by url2 and it display first satellite -->
                         <l-tile-layer :url="url2" name="carte" layer-type="base" />                            <!--change url2 by url and it display first carte -->
 
@@ -34,7 +36,10 @@
                                     <div v-if="sensor.type===1">
                                         <h4>{{sensor.position_name}}</h4>
                                         <div>Hauteur de neige : {{sensor.pressure}} mm</div>
-                                        <div>Température du sol : {{sensor.debit}} °C</div>
+                                        <div>Température au sol : {{sensor.debit}} °C</div>
+                                        <div>Température au capteur : {{sensor.debit}} °C</div>
+
+
                                     </div>
                                     <div v-if="sensor.type===2">
                                         <h4>{{sensor.position_name}}</h4>
