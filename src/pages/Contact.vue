@@ -19,7 +19,7 @@
 
                 <br><br><br>
 
-                <p> HES-SO Haute école d'ingénierie </p>
+                <p style=font-weight:bold> HES-SO Haute école d'ingénierie </p>
                 <p> Route du Rawyl 47</p>
                 <p> Case postale 2134</p>
                 <p> 1950 Sion 2</p>

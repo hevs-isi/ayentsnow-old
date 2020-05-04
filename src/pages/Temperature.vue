@@ -1,6 +1,6 @@
 <template>
     <div class="temperature" id="temperature">
-        <h3>{{sectorName}}</h3>
+        <h1>{{sectorName}}</h1>
         <!-- floor temperature -->
         <!--
         <b-row align-v="center" class="text-center">

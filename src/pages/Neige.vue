@@ -1,6 +1,6 @@
 <template>
     <div class="neige" id="neige">
-        <h3>{{sectorName}}</h3>
+        <h1 >{{sectorName}}</h1>
 
         <b-row class="m-4">
             <b-col>
