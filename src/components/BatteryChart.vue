@@ -20,18 +20,7 @@
                             fontFamily: 'Roboto'
                         }
                     },
-                    scrollbar: {
-                        barBackgroundColor: '#cccccc',
-                        barBorderRadius: 7,
-                        barBorderWidth: 0,
-                        buttonBackgroundColor: '#cccccc',
-                        buttonBorderWidth: 0,
-                        buttonBorderRadius: 7,
-                        trackBackgroundColor: 'none',
-                        trackBorderWidth: 1,
-                        trackBorderRadius: 8,
-                        trackBorderColor: '#CCC'
-                    },
+
 
 
                     yAxis: [{ // Primary yAxis

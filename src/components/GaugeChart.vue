@@ -64,8 +64,8 @@
                         data: [],
                         dataLabels: {
                             format:
-                                '<div style="text-align:center">' +
-                                '{y} V' +
+                                '<div style="text-align:center" >' +
+                                '<span>{y} V </span>' +
                                 '</div>'
                         },
                         tooltip: {
@@ -92,5 +92,6 @@
 
 </script>
 <style scoped>
+
 
 </style>

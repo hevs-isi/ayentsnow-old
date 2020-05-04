@@ -3,8 +3,12 @@
         <b-navbar toggleable="lg" type="light" id="navbar" >
                 <b-navbar-brand>
                     <div >
+                        <a href="https://www.hevs.ch/fr/" target="_blank">
                         <img class="" src="https://www.hevs.ch/img/logo-hes-so-valais-2019.png" height="50em" >
+                        </a>
+                        <a href="https://www.ayent.ch/">
                         <img class="pl-4" src="../assets/ayent.png" height="50em">
+                        </a>
                     </div>
 
                 </b-navbar-brand>
