@@ -4,6 +4,7 @@
 </template>
 
 <script>
+    const alertTemperature = 200;
     export default {
         props : [
             'dataTemperatureChart',
@@ -33,7 +34,16 @@
                             format: '{value}°C',
                         },
 
-                        opposite : true
+                        opposite : true,
+                        plotLines:[{
+                            value : alertTemperature,
+                            color: 'red',
+                            dashStyle:'shortdash',
+                            width: 2,
+                            label:{
+                                text: 'Alert gel'
+                            }
+                        }]
 
                     }, { // Secondary yAxis
                         title: {
@@ -47,6 +57,8 @@
                         },
 
                         opposite: true
+
+
                     }],
 
 

@@ -3,6 +3,7 @@
 </template>
 
 <script>
+    const alertBattery = 2.625;
     export default {
         props : [
             'dataBatteryChart',
@@ -32,7 +33,16 @@
                             format: '{value} V',
                         },
 
-                        opposite : true
+                        opposite : true,
+                        plotLines:[{
+                            value : alertBattery,
+                            color: 'red',
+                            dashStyle:'shortdash',
+                            width: 2,
+                            label:{
+                                text: 'Alert batterie'
+                            }
+                        }]
 
                     }],
                     rangeSelector: {

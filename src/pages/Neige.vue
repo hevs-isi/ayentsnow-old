@@ -193,7 +193,9 @@
                             data: arr.map( obj => Object.assign({}, {
                                 x: (moment(obj.time).unix())*1000,
                                 y: obj['payload_fields_Air humidity_value']
-                            }))
+                            })),
+
+
                         });
                     });
                     this.series_snow = mutatedArray;
