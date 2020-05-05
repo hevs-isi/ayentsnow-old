@@ -85,7 +85,7 @@
 
                 <!--Button Status--> <!-- delete layer group to see the button-->
 
-                <b-button   squared variant="null" @click="toggleStatus" style="height: fit-content; align-self: center"></b-button>
+                <b-button  class="btn" squared variant="null" @click="toggleStatus" style="height: fit-content; align-self: center"></b-button>
                 <transition name="slide">
 
                     <b-col v-if="showStatus" cols="3" class="align-self-center">
@@ -118,7 +118,12 @@
 
 </template>
 
+<style scoped>
+    .btn {
+        padding: 0px 0px;
+    }
 
+</style>
 <script>
     import {LMap, LTileLayer, LMarker, LPopup, LControlLayers, LLayerGroup} from 'vue2-leaflet'
     import Influx from 'influx'
