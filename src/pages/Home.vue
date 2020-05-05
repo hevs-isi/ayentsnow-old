@@ -61,10 +61,10 @@
 
                                 <l-popup v-if="antenna.isUp == true">
 
-                                        <h5>{{antenna.position_name}}</h5>
-                                        <div>latitude: {{antenna.position[0]}}</div>
-                                        <div>longitude: {{antenna.position[1]}}</div>
-                                        <div>Vu il y a : {{antenna.lastSeen}} secondes</div>
+                                    <h5>{{antenna.position_name}}</h5>
+                                    <div>latitude: {{antenna.position[0]}}</div>
+                                    <div>longitude: {{antenna.position[1]}}</div>
+                                    <div>Vu il y a : {{antenna.lastSeen}} secondes</div>
 
                                 </l-popup>
                                 <l-popup v-else>
@@ -387,7 +387,7 @@
             },
             antennaIconUp() {
                 return L.icon({
-                    iconUrl: require('../assets/antennaUp.png'),
+                    iconUrl: require('../assets/antenna_up.png'),
                     iconSize: [64, 64],
                     iconAnchor: [32, 32],
                     popupAnchor: [32, 0]
@@ -395,7 +395,7 @@
             },
             antennaIconDown() {
                 return L.icon({
-                    iconUrl: require('../assets/antennaDown.png'),
+                    iconUrl: require('../assets/antenna_down.png'),
                     iconSize: [64, 64],
                     iconAnchor: [32, 32],
                     popupAnchor: [32, 0]
