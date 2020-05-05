@@ -18,6 +18,7 @@ import VueResource from 'vue-resource';
 library.add(faUserSecret);
 import VueResizeText from "vue-resize-text/src/VueResizeText";
 
+import responsive from "vue-responsive";
 
 
 stockInit(Highcharts)
@@ -31,6 +32,7 @@ Vue.config.productionTip = true
 Vue.use(NProgress);
 Vue.use(VueResource);
 Vue.use(VueResizeText);
+Vue.use(responsive)
 
 
 export const serverBus = new Vue();

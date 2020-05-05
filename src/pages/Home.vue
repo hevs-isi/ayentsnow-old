@@ -1,7 +1,7 @@
 <template>
     <div class="home">
 
-        <b-container fluid class="mh-100">
+        <b-container fluid class="mh-100" >
             <b-row>
                 <transition name="slide">
                 <b-col>
@@ -23,7 +23,7 @@
                         />
 
                         <l-tile-layer :url="url" name="Satellite" layer-type="base" />                         <!--change url by url2 and it display first satellite -->
-                        <l-tile-layer :url="url2" name="carte" layer-type="base" />                            <!--change url2 by url and it display first carte -->
+                        <l-tile-layer :url="url2" name="Carte" layer-type="base" />                            <!--change url2 by url and it display first carte -->
 
                         <l-layer-group
                                 layer-type="overlay"
@@ -420,10 +420,10 @@
              */
             antennaIconUp() {
                 return L.icon({
-                    iconUrl: require('../assets/antenna_up.png'),
-                    iconSize: [64, 64],
-                    iconAnchor: [32, 32],
-                    popupAnchor: [32, 0]
+                    iconUrl: require('../assets/antennaUp.svg'),
+                    iconSize: [80, 80], //64 64
+                    iconAnchor: [40, 40],
+                    popupAnchor: [0, 0]
                 })
             },
 
@@ -433,10 +433,10 @@
              */
             antennaIconDown() {
                 return L.icon({
-                    iconUrl: require('../assets/antenna_down.png'),
-                    iconSize: [64, 64],
-                    iconAnchor: [32, 32],
-                    popupAnchor: [32, 0]
+                    iconUrl: require('../assets/antennaDown.svg'),
+                    iconSize: [80, 80],
+                    iconAnchor: [40, 40],
+                    popupAnchor: [0, 0]
                 })
             },
 
@@ -490,6 +490,7 @@
                         let now = new Date();
 
                         if (this.secondBetweenDate(now, timestamp) < 60) {
+                            // to display only the down antennas : create an icon with only transparent background.
                             this.antennas[i].icon = this.antennaIconUp();
                             this.antennas[i].isUp = true;
                             console.log("check antenna : up")
