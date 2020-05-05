@@ -144,9 +144,6 @@
                 if(newPath !== oldPath){
                     console.log(newPath)
                     location.reload()
-     //               this.loadActualSnowData(this.createQuery(newPath));
-     //               this.load30minSnowData(this.createQuery(newPath));
-     //               this.load1hSnowData(this.createQuery(newPath));
                 }
             },
             /**

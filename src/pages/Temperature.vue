@@ -64,27 +64,17 @@
             <b-col sm="2">
                 <img src="../assets/svg/battery.svg" class="my-auto" style="max-width: 50%"/>
             </b-col>
+            <!--battery chart-->
             <b-col sm>
                 <BatteryChart :dataBatteryChart="series_battery" />
             </b-col>
+            <!--Battery gauge-->
             <b-col cols="2">
                 <GaugeChart  :dataGaugeChart="parseFloat(lastBatteryValue)"/>
             </b-col>
         </b-row>
 
-        <!-- battery gauge -->
-<!--            <b-row align-v="center" class="text-center">-->
-<!--                 <b-col sm="2">-->
-<!--                     <img src="../assets/svg/battery.svg" class="my-auto" style="max-width: 50%"/>-->
-<!--                 </b-col>-->
-<!--                 <b-col sm>-->
-<!--                     <GaugeChart  :dataGaugeChart="parseFloat(lastBatteryValue)"/>-->
-<!--                 </b-col>-->
-<!--                 <b-col cols="2">-->
-<!--                     <div class = "" style="...">Niveau actuel de la batterie</div>-->
-<!--                     <div class = "" style="..."> {{lastBatteryValue}} V</div>-->
-<!--                 </b-col>-->
-<!--             </b-row>-->
+
 
 
 
@@ -159,7 +149,11 @@
                  oldPath=newPath;
              },
 
-             // done when before the page updated
+
+             /**
+              * Done before the page updates
+              * @param none
+              */
              beforeUpdate() {
                  this.reloadPage()                                   // function to reload the page
              },
@@ -362,13 +356,12 @@
 
                  /**
                   * load temperature floor AND temperature Sensor data from the database
-                  * @param paramQuery
+                  * @param paramQuery1
+                  * @param paramQuerry2
                   */
                  dualData: function(paramQuery1,paramQuerry2) {
                      let serie1;
                      let serie2;
-
-
                      Promise.all([
                          client.query(paramQuery1),
                      ]).then(parsedRes => {
@@ -383,7 +376,6 @@
                              });
 
                          });
-
 
                          Promise.all([
                              client.query(paramQuerry2),
@@ -415,25 +407,15 @@
                                      data :serie2[0].data,
                              }]
 
-
-
                              this.series_dual = serieFinal
-
                              NProgress.done();
-
                          }).catch(error => console.log(error))
-
                      }).catch(error => console.log(error))
                  },
              },
 
-
-
-
-
              data () {
                  return {
-
 
                      //series_temperatureFloor : [{
                      //    turboThreshold:60000,
@@ -453,14 +435,9 @@
 
                      }],
 
-
-
-
-
                      lastTemperatureFloorValue:"",
                      lastTemperatureSensorValue:"",
                      lastBatteryValue:"",
-
 
                      series_dual:[{
                          data: [],
@@ -468,13 +445,8 @@
 
                      dualFloorTemp:"",
                      dualSensorTemp:"",
-
-
-
                  }
-
              },
-
          }
 
 

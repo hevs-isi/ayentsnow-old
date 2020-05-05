@@ -13,9 +13,10 @@
                             @update:center="centerUpdated"
                             @update:bounds="boundsUpdated"
                             @click="printPosition"
+                            @keypress="displayAntennasStatus"
                             class="leaflet-control-layers-list"
 
-                    >
+                    > <!--@click="printPosition" -->
 
                         <l-control-layers ref="control"
                                           :sort-layers="true"
@@ -84,7 +85,7 @@
 
                 <!--Button Status--> <!-- delete layer group to see the button-->
 
- <!--               <b-button   squared variant="null" @click="toggleStatus" style="height: fit-content; align-self: center"><img :src="arrow" /></b-button>
+                <b-button   squared variant="null" @click="toggleStatus" style="height: fit-content; align-self: center"></b-button>
                 <transition name="slide">
 
                     <b-col v-if="showStatus" cols="3" class="align-self-center">
@@ -109,7 +110,7 @@
                         </div>
                     </b-card>
                 </b-col>
-               </transition> -->
+               </transition>
 
             </b-row>
         </b-container>
@@ -308,6 +309,12 @@
             boundsUpdated(bounds) {
                 this.bounds = bounds;
             },
+
+            /**
+             * Load data for icon popup
+             * !!! change querry with real sensor !!!
+             * @param id
+             */
             loadData(id) {
                 switch (id) {
                     case 1:
@@ -374,9 +381,30 @@
 
                 }
             },
+
+            /**
+             * print position clicked with the mouse
+             */
             printPosition(event) {
                 console.log(event.latlng);
             },
+
+            /**
+             * print a key if the condition is true, used to display antennas status
+             * @param event
+             */
+            displayAntennasStatus(event){
+                if(event.originalEvent.key == 's'){
+                    this.toggleStatus()
+                    console.log(event.originalEvent.key)
+                }
+
+            },
+
+            /**
+             * set device icon
+             * @returns {*}
+             */
             deviceIcon() {
                 return L.icon({
                     iconUrl: require('../assets/gps.png'),
@@ -385,6 +413,11 @@
                     popupAnchor: [-3, -76]
                 })
             },
+
+            /**
+             * set antennas up icon
+             * @returns {*}
+             */
             antennaIconUp() {
                 return L.icon({
                     iconUrl: require('../assets/antenna_up.png'),
@@ -393,6 +426,11 @@
                     popupAnchor: [32, 0]
                 })
             },
+
+            /**
+             * set antennas down icon
+             * @returns {*}
+             */
             antennaIconDown() {
                 return L.icon({
                     iconUrl: require('../assets/antenna_down.png'),
@@ -401,6 +439,12 @@
                     popupAnchor: [32, 0]
                 })
             },
+
+            /**
+             *
+             * @param eui
+             * @param id
+             */
             lastSeenAntenna(eui, id) {
                 axios('https://nodered.watermon.ch/gateway?eui=' + eui, {
                     method: 'GET', // *GET, POST, PUT, DELETE, etc.
@@ -424,6 +468,10 @@
 
 
             },
+
+            /**
+             * check all antennas if up or down
+             */
             checkAntenna() {
                 console.log("Check status antennas");
                 for (let i = 0; i < this.antennas.length; i++) {
@@ -459,17 +507,28 @@
 
 
             },
+
+            /**
+             * find time between two dates, used to check the antennas
+             * @param date1
+             * @param date2
+             * @returns {number}
+             */
             secondBetweenDate(date1, date2) {
                 return Math.ceil(Math.abs(date1 - date2) / 1000);
             },
 
-            downGateways(i){
+            /**
+             * refresh the list of the down antennas
+             * @param i
+             */
+            downGateways(antennaList){
 
                 console.log("activeGateways, home.vue l 436")
 
-                        this.downAntennas[i] = this.antennas[i]
-                        console.log(i)
-                        console.log(this.antennas[i].isUp)
+                        this.downAntennas[antennaList] = this.antennas[antennaList]
+                        console.log(antennaList)
+                        console.log(this.antennas[antennaList].isUp)
 
                 console.log("active")
                 for (let j = 0; j < this.downAntennas.length; j++) {
