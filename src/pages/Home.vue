@@ -1,10 +1,10 @@
 <template>
     <div class="home">
 
-        <b-container fluid class="mh-100" >
+        <b-container  fluid class="mh-100">
             <b-row>
                 <transition name="slide">
-                <b-col>
+                <b-col><!--880 px-->
                     <l-map
                             style="height: 880px;width: 100%"
                             :zoom="zoom"
@@ -122,6 +122,7 @@
     .btn {
         padding: 0px 0px;
     }
+
 
 </style>
 <script>
