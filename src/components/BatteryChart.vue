@@ -18,7 +18,8 @@
                     chart:{
                         style:{
                             fontFamily: 'Roboto'
-                        }
+                        },
+                        backgroundColor:'#f4f7fc'
                     },
 
 
@@ -41,7 +42,7 @@
                             dashStyle:'shortdash',
                             width: 2,
                             label:{
-                                text: 'Alert batterie'
+                                text: 'Alerte batterie'
                             }
                         }]
 
@@ -85,6 +86,9 @@
                         floating: true,
 
                     },
+                    tooltip:{
+                        pointFormat : '{series.name}: <b>{point.y:.3f}V</b><br/>'
+                    }
 
                 }
             }

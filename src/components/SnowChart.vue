@@ -18,7 +18,8 @@
                     chart:{
                         style:{
                             fontFamily: 'Roboto'
-                        }
+                        },
+                        backgroundColor:'#f4f7fc'
                     },
                     scrollbar: {
                         barBackgroundColor: '#cccccc',
@@ -88,6 +89,9 @@
                         floating: true,
 
                     },
+                    tooltip:{
+                        pointFormat : '{series.name}: <b>{point.y:.2f}cm</b><br/>'
+                    }
 
                 }
             }

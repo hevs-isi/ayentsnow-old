@@ -1,12 +1,14 @@
 <template>
-    <div class="home">
-
+    <div class="home" style="padding-left: 20px; padding-right: 20px">
+        <h1>Global</h1>
+        <br><br>
+        <div class="divLeft" v-if="window.width>windowLimitWidth">
         <b-container  fluid class="mh-100">
             <b-row>
                 <transition name="slide">
                 <b-col><!--880 px-->
                     <l-map
-                            style="height: 880px;width: 100%"
+                            style="height: 880px; width: 100%"
                             :zoom="zoom"
                             :center="center"
                             @update:zoom="zoomUpdated"
@@ -114,17 +116,109 @@
 
             </b-row>
         </b-container>
-    </div>
+        </div>
+        <!--big screen temperature-->
+        <div class="divRight" v-if="window.width>windowLimitWidth">
+            <h2> Température</h2>
+            <TemperatureChartGlobal :dataTemperatureGlobalChart="series_dual"/>
+            <p> Température actuelle Télécabine : {{lastTempTelecabine}}°C </p>
+            <p> Température actuelle Pralan : {{lastTempPralan}}°C </p>
+            <p> Température actuelle Pro de Savioz : {{lastTempProDeSavioz}}°C </p>
+
+
+            <br><br>
+        </div>
+        <!--small screen temperature-->
+        <div  v-if="window.width<=windowLimitWidth">
+            <h2>Température</h2>
+            <p style="padding-bottom: 6px;padding-top: 6px"> Température actuelle Télécabine : {{lastTempTelecabine}}°C </p>
+            <p style="padding-bottom: 6px"> Température actuelle Pralan : {{lastTempPralan}}°C </p>
+            <p style="padding-bottom: 6px"> Température actuelle Pro de Savioz : {{lastTempProDeSavioz}}°C </p>
+            <br><br>
+        </div>
+        <!--big screen neige-->
+        <div class="divRight" v-if="window.width>windowLimitWidth">
+            <h2 > Hauteur de neige</h2>
+            <br>
+
+            <table class="table table-striped">
+                <thead class="thead-light">
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">Il y a 1h</th>
+                    <th scope="col">Il y a 30min</th>
+                    <th scope="col">Actuellement</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th scope="row">Télécabine</th>
+                    <td>1 cm</td>
+                    <td>2 cm</td>
+                    <td>3 cm</td>
+                </tr>
+                <tr>
+                    <th scope="row">Pralan</th>
+                    <td>4 cm</td>
+                    <td>5 cm</td>
+                    <td>6 cm</td>
+                </tr>
+                <tr>
+                    <th scope="row">Pro De Savioz</th>
+                    <td>7 cm</td>
+                    <td>8 cm</td>
+                    <td>9 cm</td>
+                </tr>
+
+                </tbody>
+            </table>
+            <!--small screen neige-->
+        </div>
+        <div  v-if="window.width<=windowLimitWidth">
+            <h2> Hauteur de neige</h2>
+            <br>
+
+            <table class="table table-striped">
+                <thead class="thead-light">
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">Il y a 1h</th>
+                    <th scope="col">Il y a 30min</th>
+                    <th scope="col">Actuellement</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th scope="row">Télécabine</th>
+                    <td>1 cm</td>
+                    <td>2 cm</td>
+                    <td>3 cm</td>
+                </tr>
+                <tr>
+                    <th scope="row">Pralan</th>
+                    <td>4 cm</td>
+                    <td>5 cm</td>
+                    <td>6 cm</td>
+                </tr>
+                <tr>
+                    <th scope="row">Pro De Savioz</th>
+                    <td>7 cm</td>
+                    <td>8 cm</td>
+                    <td>9 cm</td>
+                </tr>
+
+                </tbody>
+            </table>
+
+
+        </div>
+       <!-- Width: {{ window.width }},-->
+       <!-- Height: {{ window.height }}-->
+  </div>
 
 </template>
 
-<style scoped>
-    .btn {
-        padding: 0px 0px;
-    }
 
-
-</style>
 <script>
     import {LMap, LTileLayer, LMarker, LPopup, LControlLayers, LLayerGroup} from 'vue2-leaflet'
     import Influx from 'influx'
@@ -133,9 +227,16 @@
     import axios from 'axios'
     import credInflux from '../constants/influx'
 
-
-
+    import TemperatureChartGlobal from "../components/TemperatureChartGlobal";
+    import moment from "moment";
+    import NProgress from "nprogress";
     delete Icon.Default.prototype._getIconUrl;
+
+    const queryTempTelecabine = 'select "payload_fields_Illuminance_value" from mqtt_consumer WHERE topic = ' + "'" + 'ayent_monitoring/devices/ambient_sensor_2/up' + '' + "'" + 'AND time>now()-3h';
+    const queryTempPralan = 'select "payload_fields_Illuminance_value" from mqtt_consumer WHERE topic = ' + "'" + 'ayent_monitoring/devices/70b3d57ba0000bd0/up' + "'" + 'AND time>now()-3h';
+    const queryTempProDeSavioz = 'select "payload_fields_Air humidity_value" from mqtt_consumer WHERE topic = ' + "'" + 'ayent_monitoring/devices/ambient_sensor_2/up' + "'"  + 'AND time>now()-3h' ;
+
+
     const client = new Influx.InfluxDB({
         database: credInflux.database,
         host: credInflux.host,
@@ -154,7 +255,7 @@
     export default {
         name: 'home',
         components: {
-            LMap, LTileLayer, LMarker, LPopup, LControlLayers, LLayerGroup,
+            LMap, LTileLayer, LMarker, LPopup, LControlLayers, LLayerGroup, TemperatureChartGlobal
 
         },
         data() {
@@ -245,9 +346,30 @@
                 }],
                 response: "",
                 downAntennas:[],
+
+     //----------Window
+                window:{
+                    width:0,
+                    height:0,
+                },
+                windowLimitWidth : 700,
+    //-----------Temperature
+                series_dual:[{
+                    data: [],
+                }],
+                lastTempTelecabine:"",
+                lastTempPralan:"",
+                lastTempProDeSavioz:"",
+    //-----------Neige
+
+
             }
+
         },
         created() {
+            window.addEventListener('resize', this.handleResize);
+            this.handleResize();
+
             this.checkAntenna();
     //        this.activeGateways();
             this.startTimer();
@@ -255,12 +377,17 @@
 
         },
         mounted() {
-
+            this.dualData(queryTempTelecabine, queryTempPralan,queryTempProDeSavioz)
 
         },
         //VERY VERY important !! Destroy the timer when the user change the page
         beforeDestroy() {
             clearInterval(this.timer);
+        },
+
+        destroyed() {
+            window.removeEventListener('resize', this.handleResize);
+
         },
         methods: {
             checkDevice(){
@@ -544,7 +671,103 @@
                     console.log(this.downAntennas[j])
                 }
 
-            }
+            },
+
+    //-----------------------------------END MAP PART-------------------------------------------------------------------
+    //----------------------------------WINDOW PART --------------------------------------------------------------------
+
+            handleResize : function(){
+                this.window.width = window.innerWidth;
+                this.window.height = window.innerHeight;
+            },
+    //---------------------------------START CHART PART-----------------------------------------------------------------
+            /**
+             * load temperature floor from Télécabine, Pralan AND PRo de Savioz
+             * @param queryTelecabine
+             * @param queryPralan
+             * @param queryProDeSavioz
+             */
+            dualData: function(queryTelecabine, queryPralan, queryProDeSavioz) {
+                let serie1;
+                let serie2;
+                let serie3;
+                console.log(queryProDeSavioz)
+                console.log("home.vue l 584 : dualdata load")
+                Promise.all([
+                    client.query(queryTelecabine),
+                ]).then(parsedRes => {
+                    serie1 = parsedRes.map( arr => {
+                        this.lastTempTelecabine = arr[arr.length-1]['payload_fields_Illuminance_value'].toFixed(2); // temperature sol
+
+                        return Object.assign({}, {
+                            data: arr.map( obj => Object.assign({}, {
+                                x: (moment(obj.time).unix())*1000,
+                                y: obj['payload_fields_Illuminance_value']
+                            }))
+                        });
+
+                    });
+
+                    Promise.all([
+                        client.query(queryPralan),
+                    ]).then(parsedRes => {
+                        serie2 = parsedRes.map( arr => {
+                            this.lastTempPralan = arr[arr.length-1]['payload_fields_Illuminance_value'].toFixed(2); //temperature capteur
+
+                            return Object.assign({}, {
+                                data: arr.map( obj => Object.assign({}, {
+                                    x: (moment(obj.time).unix())*1000,
+                                    y: obj['payload_fields_Illuminance_value']
+                                }))
+                            });
+
+                        });
+
+                        Promise.all([
+                            client.query(queryProDeSavioz),
+                        ]).then(parsedRes => {
+                            serie3 = parsedRes.map( arr => {
+                                this.lastTempProDeSavioz = arr[arr.length-1]['payload_fields_Air humidity_value'].toFixed(2); //temperature capteur
+
+                                return Object.assign({}, {
+                                    data: arr.map( obj => Object.assign({}, {
+                                        x: (moment(obj.time).unix())*1000,
+                                        y: obj['payload_fields_Air humidity_value']
+                                    }))
+                                });
+
+                            });
+                        //build final objet to send to chart
+                        let serieFinal = [{
+                            name : 'Télécabine',
+                            color : '#4285f4', //bleu
+                            type : 'spline',
+                            turboThreshold:60000,           // if no data displayed : augmented it
+                            data : serie1[0].data
+                        },{
+                            name : 'Pralan',
+                            color : '#f4b400', //orange
+                            type : 'spline',
+                            turboThreshold:60000,           // if no data displayed : augmented it
+                            data :serie2[0].data,
+                        },{
+                            name : 'Pro de Savioz',
+                            color : '#006600', //orange
+                            type : 'spline',
+                            turboThreshold:60000,           // if no data displayed : augmented it
+                            data :serie3[0].data,
+                        }]
+
+                        this.series_dual = serieFinal
+                        NProgress.done();
+                        }).catch(error => console.log(error))
+                    }).catch(error => console.log(error))
+                }).catch(error => console.log(error))
+            },
+
+    //--------------------------------END CHART TEMPERATURE-------------------------------------------------------------
+    //-------------------------------START CHART NEIGE------------------------------------------------------------------
+
 
         },
     }
@@ -623,4 +846,34 @@
         transform: translateX(100vh);
         opacity: 0;
     }
+
+    html, body {
+        height: 100%;
+        background-color: #f4f7fc;
+
+    }
+
+    *{
+        font-family: Roboto;
+        margin: 0;
+        padding: 0;
+
+    }
+    .divLeft{
+        width: 40%;
+        height: 100%;
+        float: left;
+        text-align: center;
+    }
+    .divRight{
+        width: 60%;
+        height: 100%;
+        float: right;
+        text-align: center;
+        padding-left: 20px;
+    }
+    .btn {
+        padding: 0px 0px;
+    }
+
 </style>

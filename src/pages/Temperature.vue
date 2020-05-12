@@ -1,71 +1,36 @@
 <template>
     <div class="temperature" id="temperature">
         <h1>{{sectorName}}</h1>
-        <!-- floor temperature -->
-        <!--
-        <b-row align-v="center" class="text-center">
 
-            <b-col sm="2">
-                <div class="mb-4" style="font-size: 130%">Temperature du sol </div>
-                <img src="../assets/svg/temperature.svg" class="my-auto" style="max-width: 50%"/>
-            </b-col>
-
-            <b-col sm>
-                <StockChart :data="series_temperatureFloor"/>
-            </b-col>
-
-            <b-col cols="2">
-                <div class = "" style="...">Temperature actuelle du sol</div>
-                <div class = "" style="..."> {{lastTemperatureFloorValue}} °C</div>
-            </b-col>
-        </b-row>
-
+        <!-- dual chart big screen-->
         <br><br>
-        -->
-        <!-- sensor temperature -->
-        <!--
-        <b-row align-v="center" class="text-center">
-            <b-col sm="2">
-                <div class="mb-4" style="font-size: 130%">Temperature du capteur </div>
-                <img src="../assets/svg/temperature.svg" class="my-auto" style="max-width: 50%"/>
-            </b-col>
-            <b-col sm>
-                <StockChart :data="series_temperatureSensor"/>
-            </b-col>
+        <b-row align-v="center" class="text-center" v-if="window.width>windowLimitWidth">
 
-            <b-col cols="2">
-                <div class = "" style="...">Temperature actuelle du capteur</div>
-                <div class = "" style="..."> {{lastTemperatureSensorValue}} °C</div>
-            </b-col>
-        </b-row>
-        -->
-        <!-- dual chart-->
-        <br><br>
-        <b-row align-v="center" class="text-center">
-            <b-col sm="2">
-                <img src="../assets/svg/temperature.svg" class="my-auto" style="max-width: 50%"/>
-            </b-col>
             <b-col sm> <!---->
                 <TemperatureChart :dataTemperatureChart="series_dual"/>
             </b-col>
 
             <b-col cols="2">
-                <div class = "" style="...">Temperature du capteur : {{dualSensorTemp}} °C</div>
-                <div class = "" style="..." >Temperature du sol : {{dualFloorTemp}} °C</div>
+                <div class = "" style="...">Température du capteur : {{dualSensorTemp}} °C</div>
+                <div class = "" style="..." >Température du sol : {{dualFloorTemp}} °C</div>
             </b-col>
         </b-row>
+        <!-- dual chart small screen-->
+        <div v-if="window.width<=windowLimitWidth">
+            <h2>Température</h2>
+            Température actuelle du sol : {{dualFloorTemp}} °C
+            Température actuelle du capteur : {{dualSensorTemp}} °C
+        </div>
 
 
 
 
         <br><br>
-        <!-- battery -->
-        <b-row align-v="center" class="text-center">
-            <b-col sm="2">
-                <img src="../assets/svg/battery.svg" class="my-auto" style="max-width: 50%"/>
-            </b-col>
+        <!-- battery big screen-->
+        <b-row align-v="center" class="text-center" v-if="window.width>windowLimitWidth">
+
             <!--battery chart-->
-            <b-col sm>
+            <b-col sm >
                 <BatteryChart :dataBatteryChart="series_battery" />
             </b-col>
             <!--Battery gauge-->
@@ -73,7 +38,12 @@
                 <GaugeChart  :dataGaugeChart="parseFloat(lastBatteryValue)"/>
             </b-col>
         </b-row>
+        <!-- battery small screen-->
+        <div v-if="window.width<=windowLimitWidth">
+            <h2>Niveau de Batterie</h2>
+            Niveau actuelle de batterie : {{lastBatteryValue}} V
 
+        </div>
 
 
 
@@ -81,12 +51,6 @@
          </div>
 
      </template>
-     <style scoped>
-         #temperature {
-             font-family: Roboto;
-         }
-
-     </style>
 
      <script>
          import Influx from 'influx'
@@ -158,7 +122,20 @@
                  this.reloadPage()                                   // function to reload the page
              },
 
+             /**
+              * Get the windows size
+              */
+             created() {
+                 window.addEventListener('resize', this.handleResize);
+                 this.handleResize();
+             },
+             /**
+              * destroy listener for windows size
+              */
+             destroyed() {
+                 window.removeEventListener('resize', this.handleResize);
 
+             },
              methods : {
                  /**
                   * reload de page when the user switch the room
@@ -247,74 +224,6 @@
 
                      return returnQuery
                  },
-         //----------------------------------------------------------------------------------------------------------
-                 /**
-                  * load temperature of the floor data from the database
-                  * @param paramQuery
-                  */
-                 // loadTemperatureFloorData: function(paramQuery) {
-                 //
-                 //     console.log("query : " + paramQuery)
-                 //
-                 //     Promise.all([
-                 //         client.query(paramQuery),
-                 //     ]).then(parsedRes => {
-                 //         const mutatedArray = parsedRes.map( arr => {
-                 //             this.lastTemperatureFloorValue = arr[arr.length-1]['payload_fields_Illuminance_value'].toFixed(2); //to fixed: fix number of digit
-                 //
-                 //
-                 //             return Object.assign({}, {
-                 //
-                 //                 name: "Temperature au sol", // name on the chart
-                 //                 turboThreshold:60000,
-                 //                 tooltip: {
-                 //                     valueSuffix: ' °C'
-                 //                 },
-                 //                 data: arr.map( obj => Object.assign({}, {
-                 //                     x: (moment(obj.time).unix())*1000,
-                 //                     y: obj['payload_fields_Illuminance_value']
-                 //                 }))
-                 //             });
-                 //
-                 //         });
-                 //         this.series_temperatureFloor = mutatedArray;
-                 //         NProgress.done();
-                 //     }).catch(error => console.log(error))
-                 // },
-
-                 /**
-                  * load temperature of the sensor data from the database
-                  * @param paramQuery
-                  */
-                 // loadTemperatureSensorData: function(paramQuery) {
-                 //
-                 //     console.log("query : " + paramQuery)
-                 //
-                 //     Promise.all([
-                 //         client.query(paramQuery),
-                 //     ]).then(parsedRes => {
-                 //         const mutatedArray = parsedRes.map( arr => {
-                 //             this.lastTemperatureSensorValue = arr[arr.length-1]['payload_fields_Air temperature_value'].toFixed(2); //to fixed: fix number of digit
-                 //
-                 //
-                 //             return Object.assign({}, {
-                 //
-                 //                 name: "Temperature sensor", // name on the chart
-                 //                 turboThreshold:60000,
-                 //                 tooltip: {
-                 //                     valueSuffix: ' °C'
-                 //                 },
-                 //                 data: arr.map( obj => Object.assign({}, {
-                 //                     x: (moment(obj.time).unix())*1000,
-                 //                     y: obj['payload_fields_Air temperature_value']
-                 //                 }))
-                 //             });
-                 //
-                 //         });
-                 //         this.series_temperatureSensor = mutatedArray;
-                 //         NProgress.done();
-                 //     }).catch(error => console.log(error))
-                 // },
 
                  /**
                   * load Battery data from the database
@@ -394,13 +303,13 @@
 
                              //build final objet to send to chart
                              let serieFinal = [{
-                                     name : 'Temperature du sol',
+                                     name : 'Température du sol',
                                      color : '#4285f4', //bleu
                                      type : 'spline',
                                      turboThreshold:60000,           // if no data displayed : augmented it
                                      data : serie1[0].data
                              },{
-                                     name : 'Temperature du capteur',
+                                     name : 'Température du capteur',
                                      color : '#f4b400', //orange
                                      type : 'spline',
                                      turboThreshold:60000,           // if no data displayed : augmented it
@@ -412,22 +321,18 @@
                          }).catch(error => console.log(error))
                      }).catch(error => console.log(error))
                  },
+
+                 //----------------------------------WINDOW PART --------------------------------------------------------------------
+
+                 handleResize : function(){
+                     this.window.width = window.innerWidth;
+                     this.window.height = window.innerHeight;
+                 },
+
              },
 
              data () {
                  return {
-
-                     //series_temperatureFloor : [{
-                     //    turboThreshold:60000,
-                     //    data: [],
-
-                     //}],
-
-                     //series_temperatureSensor: [{
-                     //    turboThreshold:60000,
-                     //    data: [],
-
-                     //}],
 
                      series_battery : [{
                          turboThreshold: 60000,
@@ -445,6 +350,13 @@
 
                      dualFloorTemp:"",
                      dualSensorTemp:"",
+
+                     //----------Window
+                     window:{
+                         width:0,
+                         height:0,
+                     },
+                     windowLimitWidth : 700,
                  }
              },
          }
@@ -454,5 +366,11 @@
      </script>
 
      <style scoped>
+         #temperature {
+             font-family: Roboto;
+         }
 
+         body{
+             background-color: #f4f7fc;
+         }
      </style>

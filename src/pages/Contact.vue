@@ -1,13 +1,11 @@
 <template>
     <div class="info" id="contact">
-        <b-jumbotron>
-            <template v-slot:header>Ayent Snow</template>
 
-            <template v-slot:lead>
+                <h1>Ayent Snow</h1>
                 <br>
                 <p>Le projet de monitoring de l'état des routes par la</p>
                 <a href="https://www.hevs.ch/fr/" target="_blank">
-                    <img class="ml-3" src="https://www.hevs.ch/img/logo-hes-so-valais-2019.png" height="100em" >
+                    <img class="ml-3" src="https://www.hevs.ch/media/image/3/normal/1_HES_SO_VS_CMJN_picto.png" height="100em" >
                 </a>
 
                 <br><br>
@@ -29,7 +27,6 @@
 
                 <br><br>
 
-            </template>
 
             <hr class="my-4">
             <b-carousel
@@ -51,7 +48,6 @@
                 </b-carousel-slide>
 
             </b-carousel>
-        </b-jumbotron>
     </div>
 </template>
 
@@ -70,6 +66,9 @@
 <style scoped>
     #contact {
         font-family: Roboto;
+    }
+    body{
+        background-color: #f4f7fc;
     }
 
 </style>

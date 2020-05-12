@@ -16,7 +16,7 @@
                 gaugeOptions: {
                     chart: {
                         type: 'solidgauge',
-
+                        backgroundColor : '#f4f7fc'
                     },
 
                    title : null,
@@ -92,6 +92,8 @@
 
 </script>
 <style scoped>
-
+    *{
+        padding-right: 20px;
+    }
 
 </style>

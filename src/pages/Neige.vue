@@ -1,40 +1,40 @@
 <template>
     <div class="neige" id="neige">
-        <h1 >{{sectorName}}</h1>
+        <h1> Hauteur de neige : {{sectorName}}</h1>
 
         <b-row class="m-4">
             <b-col>
-                <b-card
+                <b-card class="card flex-fill"
                         border-variant="secondary"
-                        header="Hauteur de neige il y a 1 heure"
+                        header="Il y a 1 heure"
                         header-border-variant="secondary"
                         align="center"
                 >
-                    <b-card-text v-if = "last1h_snow.length != 0" class="h1">{{last1h_snow}} cm</b-card-text>
-                    <b-card-text v-if = "last1h_snow.length == 0" class="h1" >{{lastSnowValue}} cm</b-card-text> <!--test if there is a value saved or not -->
+                    <b-card-text v-if = "last1h_snow.length != 0" class="h1">{{last1h_snow}}cm</b-card-text>
+                    <b-card-text v-if = "last1h_snow.length == 0" class="h1" >{{lastSnowValue}}cm</b-card-text> <!--test if there is a value saved or not -->
 
                 </b-card>
             </b-col>
             <b-col>
                 <b-card
                         border-variant="secondary"
-                        header="Hauteur de neige il y a 30 minutes"
+                        header="Il y a 30 minutes"
                         header-border-variant="secondary"
                         align="center"
                 >
-                    <b-card-text v-if = "last30min_snow.length != 0 " class="h1" >{{last30min_snow}} cm</b-card-text>
-                    <b-card-text v-if = "last30min_snow.length == 0 " class="h1" >{{lastSnowValue}} cm</b-card-text> <!-- test if there is a value saved or not -->
+                    <b-card-text v-if = "last30min_snow.length != 0 " class="h1" >{{last30min_snow}}cm</b-card-text>
+                    <b-card-text v-if = "last30min_snow.length == 0 " class="h1" >{{lastSnowValue}}cm</b-card-text> <!-- test if there is a value saved or not -->
 
                 </b-card>
             </b-col>
             <b-col>
                 <b-card
                         border-variant="secondary"
-                        header="Hauteur de neige maintenant"
+                        header="Actuellement"
                         header-border-variant="secondary"
                         align="center"
                 >
-                    <b-card-text class="h1">{{lastSnowValue}} cm</b-card-text>
+                    <b-card-text class="h1">{{lastSnowValue}}cm</b-card-text>
                 </b-card>
             </b-col>
         </b-row>
@@ -47,7 +47,7 @@
                         align="center"
                 >
                     <b-card-text class="">
-                        <span class="h1 mr-3 align-middle">{{delta_snow}} cm</span>
+                        <span class="h1 mr-3 align-middle">{{delta_snow}}cm</span>
 
                         <img v-if = "delta_snow < 0 " src="../assets/svg/diagonal-arrow-down.svg" style="max-width: 2%" class="align-middle"/>
                        <!-- <span  v-if = "delta_snow < 0 " class="h1 mr-3 align-middle">down </span> -->
@@ -60,17 +60,8 @@
             </b-col>
         </b-row>
         <br><br>
-        <b-row align-v="center" class="text-center">
-            <b-col sm="2">
-                <img src="../assets/svg/snowflake2.jpg" class="my-auto" style="max-width: 50%"/>
-            </b-col>
-            <b-col sm>
+        <b-row align-v="center" class="text-center" v-if="window.width>windowLimitWidth">
                 <SnowChart :dataSnowChart="series_snow"/>
-            </b-col>
-            <b-col sm="2">
-                <img src="../assets/svg/snowflake2.jpg" class="my-auto" style="max-width: 50%"/>
-            </b-col>
-
         </b-row>
 
 
@@ -78,12 +69,7 @@
     </div>
 
 </template>
-<style scoped>
-    #neige {
-        font-family: Roboto;
-    }
 
-</style>
 
 <script>
     import Influx from 'influx'
@@ -132,6 +118,21 @@
         },
         updated() {
             this.calculate_delta_snow();
+
+        },
+
+        /**
+         * Get the windows size
+         */
+        created() {
+            window.addEventListener('resize', this.handleResize);
+            this.handleResize();
+        },
+        /**
+         * destroy listener for windows size
+         */
+        destroyed() {
+            window.removeEventListener('resize', this.handleResize);
 
         },
 
@@ -246,6 +247,13 @@
                 console.log(this.delta_snow)
             },
 
+            //----------------------------------WINDOW PART --------------------------------------------------------------------
+
+            handleResize : function(){
+                this.window.width = window.innerWidth;
+                this.window.height = window.innerHeight;
+            },
+
         },
         data () {
             return {
@@ -261,6 +269,12 @@
                 last1h_snow:"",
                 delta_snow:"",
 
+                //----------Window
+                window:{
+                    width:0,
+                    height:0,
+                },
+                windowLimitWidth : 700,
             }
 
         }
@@ -268,6 +282,12 @@
     }
 </script>
 
-<style scoped>
+<style >
+    #neige {
+        font-family: Roboto;
+    }
+    body{
+        background-color: #f4f7fc;
+    }
 
 </style>

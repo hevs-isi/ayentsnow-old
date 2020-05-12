@@ -1,5 +1,5 @@
 <template>
-    <highcharts class="stock" :constructor-type="'stockChart'" :options="stockOptions" id="temperaturechart"></highcharts>
+    <highcharts class="stock" :constructor-type="'stockChart'" :options="stockOptions" id="dataTemperatureGlobalChart"></highcharts>
 
 </template>
 
@@ -7,21 +7,22 @@
     const alertTemperature = 200;
     export default {
         props : [
-            'dataTemperatureChart',
+            'dataTemperatureGlobalChart',
 
         ],
         data () {
             return {
                 stockOptions: {
                     title:{
-                      text : "Température"
+                        text : ""
                     },
 
                     chart:{
-                      style:{
-                          fontFamily: 'Roboto'
-                      },
+                        style:{
+                            fontFamily: 'Roboto'
+                        },
                         backgroundColor:'#f4f7fc'
+
                     },
                     scrollbar: {
                         barBackgroundColor: '#cccccc',
@@ -38,7 +39,7 @@
 
                     yAxis: [{ // Primary yAxis
                         title: {
-                            text: 'Température du sol',
+                            text: 'Télécabine',
                             style : {
                                 color :  '#4285f4'
                             },
@@ -60,7 +61,7 @@
 
                     }, { // Secondary yAxis
                         title: {
-                            text: 'Température du capteur',
+                            text: 'Pralan',
                             style:{
                                 color : '#f4b400'
                             },
@@ -72,38 +73,25 @@
                         opposite: true
 
 
+                    },{ // third yAxis
+                        title: {
+                            text: 'Pro de Savioz',
+                            style:{
+                                color : '#006600'
+                            },
+                        },
+                        labels: {
+                            format: '{value} °C',
+                        },
+
+                        opposite: true
                     }],
 
 
 
-                    rangeSelector: {
-                        selected: 'all',
-                        buttons: [{
-                            type: 'hour',
-                            count: 6,
-                            text: '6h',
-                        }, {
-                            type: 'hour',
-                            count: 24,
-                            text: '24h'
-                        }, {
-                            type: 'day',
-                            count: 7,
-                            text: '7d'
-                        }, {
-                            type: 'month',
-                            count: 1,
-                            text: '1m'
-                        }, {
-                            type: 'month',
-                            count: 3,
-                            text: '3m'
-                        }, {
-                            type: 'all',
-                            text: 'All'
-                        }]
-                    },
-                    series: this.dataTemperatureChart,
+                    rangeSelector: false,
+
+                    series: this.dataTemperatureGlobalChart,
 
                     legend :{
                         enabled : true,
@@ -111,7 +99,7 @@
                         align: 'left',
                         x: 30,
                         verticalAlign: 'top',
-                        y: 65,
+                        y: 0,
                         floating: true,
 
                     },
@@ -129,7 +117,7 @@
 
 
         watch: {
-            dataTemperatureChart (newValue) {
+            dataTemperatureGlobalChart (newValue) {
                 this.stockOptions.series = newValue
 
 
@@ -144,6 +132,8 @@
     .stock {
         width: 70%;
         margin: 0 auto;
+        padding-left: 0;
+        padding-right: 0;
     }
 
 
