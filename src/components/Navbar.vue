@@ -17,11 +17,11 @@
 <!--                <b-navbar-toggle target="nav-collapse" tabs align="center"></b-navbar-toggle>   -->
                 <b-collapse  id="nav-collapse" is-nav >
                     <b-navbar-nav  class="ml-auto" >
-                        <b-nav-item  href="/#/" > GLOBAL</b-nav-item>
+                        <b-nav-item  href="/#/" > <img src="../assets/svg/globalicon.svg" height="30"> </b-nav-item>
 
                         <b-nav-item-dropdown >
                             <!-- Using 'button-content' slot -->
-                            <template slot="button-content">NEIGE</template>
+                            <template slot="button-content"> <img src="../assets/svg/snowIcon.svg" height="30"></template>
                             <b-dropdown-item :to="{ name: 'neige', params: {sensorName: 'measure-v2', sectorName: 'Télécabine' } }">Télécabine</b-dropdown-item>
                             <b-dropdown-item :to="{ name: 'neige', params: {sensorName: 'measure-v0', sectorName: 'Pralan'  } }">Pralan</b-dropdown-item>
                             <b-dropdown-item :to="{ name: 'neige', params: {sensorName: 'measure-v0', sectorName: 'Pro De Savioz'  } }">Pro de Savioz</b-dropdown-item>
@@ -30,14 +30,14 @@
 
                         <b-nav-item-dropdown >
                             <!-- Using 'button-content' slot -->
-                            <template slot="button-content">TEMPÉRATURE</template>
+                            <template slot="button-content"><img src="../assets/svg/thermoIcon.svg" height="30">  </template>
                             <b-dropdown-item :to="{ name: 'temperature', params: {sensorName: 'measure-v2', sectorName: 'Télécabine' } }">Télécabine</b-dropdown-item>
                             <b-dropdown-item :to="{ name: 'temperature', params: {sensorName: 'measure-v0', sectorName: 'Pralan'  } }">Pralan</b-dropdown-item>
                             <b-dropdown-item :to="{ name: 'temperature', params: {sensorName: 'measure-v0', sectorName: 'Pro de Savioz'  } }">Pro de Savioz</b-dropdown-item>
                         </b-nav-item-dropdown>
 
                         <!-- Test new button Contact with creation of a new page-->
-                        <b-nav-item  href="/#/contact">CONTACT</b-nav-item>
+                        <b-nav-item  href="/#/contact"><img src="../assets/svg/contactIcon.svg" height="30"></b-nav-item>
 
                     </b-navbar-nav>
                     <!-- Right aligned nav items -->
@@ -74,7 +74,7 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
     #navbar {
-        background-color: #f4f7fc; /*#B8B8B8*/
+        background-color: #c4d3eb; /*#f4f7fc*/
         font-family: Roboto;
 
     }

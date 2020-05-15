@@ -4,15 +4,21 @@
 
         <!-- dual chart big screen-->
         <br><br>
-        <b-row align-v="center" class="text-center" v-if="window.width>windowLimitWidth">
+        <b-row align-v="center" class="m-4" v-if="window.width>windowLimitWidth" >
 
             <b-col sm> <!---->
                 <TemperatureChart :dataTemperatureChart="series_dual"/>
             </b-col>
 
-            <b-col cols="2">
-                <div class = "" style="...">Température du capteur : {{dualSensorTemp}} °C</div>
-                <div class = "" style="..." >Température du sol : {{dualFloorTemp}} °C</div>
+            <b-col cols="2" >
+                <b-card class="card flex-fill" header="Capteur" align="center" >
+                    <b-card-text  class="h1">{{dualSensorTemp}}°C</b-card-text>
+                </b-card>
+                <br>
+                <b-card class="card flex-fill" header="Sol" align="center" >
+                    <b-card-text  class="h1">{{dualFloorTemp}}°C</b-card-text>
+                </b-card>
+
             </b-col>
         </b-row>
         <!-- dual chart small screen-->

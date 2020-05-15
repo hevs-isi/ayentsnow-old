@@ -119,7 +119,7 @@
         </div>
         <!--big screen temperature-->
         <div class="divRight" v-if="window.width>windowLimitWidth">
-            <h2> Température</h2>
+            <h2> Température du sol</h2>
             <TemperatureChartGlobal :dataTemperatureGlobalChart="series_dual"/>
             <p> Température actuelle Télécabine : {{lastTempTelecabine}}°C </p>
             <p> Température actuelle Pralan : {{lastTempPralan}}°C </p>
@@ -130,7 +130,7 @@
         </div>
         <!--small screen temperature-->
         <div  v-if="window.width<=windowLimitWidth">
-            <h2>Température</h2>
+            <h2>Température du sol</h2>
             <p style="padding-bottom: 6px;padding-top: 6px"> Température actuelle Télécabine : {{lastTempTelecabine}}°C </p>
             <p style="padding-bottom: 6px"> Température actuelle Pralan : {{lastTempPralan}}°C </p>
             <p style="padding-bottom: 6px"> Température actuelle Pro de Savioz : {{lastTempProDeSavioz}}°C </p>
@@ -823,29 +823,11 @@
         line-height: 23px;
     }
 
-    .console {
-        background-color: #828ea0;
-    }
-    .example-custom-control {
-        background: #fff;
-        padding: 0 0.5em;
-        border: 1px solid #aaa;
-        border-radius: 0.1em;
-    }
+
     .leaflet-control-layers-list {
         text-align: left;
     }
-    .slide-enter-active {
-        transition: all .4s ease;
-    }
-    .slide-leave-active {
 
-    }
-    .slide-enter, .slide-leave-to {
-
-        transform: translateX(100vh);
-        opacity: 0;
-    }
 
     html, body {
         height: 100%;
@@ -871,6 +853,7 @@
         float: right;
         text-align: center;
         padding-left: 20px;
+
     }
     .btn {
         padding: 0px 0px;

@@ -5,11 +5,9 @@
         <b-row class="m-4">
             <b-col>
                 <b-card class="card flex-fill"
-                        border-variant="secondary"
                         header="Il y a 1 heure"
-                        header-border-variant="secondary"
                         align="center"
-                >
+                > <!--border-variant="secondary" AND header-border-variant="secondary" for border black -->
                     <b-card-text v-if = "last1h_snow.length != 0" class="h1">{{last1h_snow}}cm</b-card-text>
                     <b-card-text v-if = "last1h_snow.length == 0" class="h1" >{{lastSnowValue}}cm</b-card-text> <!--test if there is a value saved or not -->
 
@@ -17,9 +15,7 @@
             </b-col>
             <b-col>
                 <b-card
-                        border-variant="secondary"
                         header="Il y a 30 minutes"
-                        header-border-variant="secondary"
                         align="center"
                 >
                     <b-card-text v-if = "last30min_snow.length != 0 " class="h1" >{{last30min_snow}}cm</b-card-text>
@@ -29,9 +25,7 @@
             </b-col>
             <b-col>
                 <b-card
-                        border-variant="secondary"
                         header="Actuellement"
-                        header-border-variant="secondary"
                         align="center"
                 >
                     <b-card-text class="h1">{{lastSnowValue}}cm</b-card-text>
@@ -41,9 +35,7 @@
         <b-row class="m-4">
             <b-col>
                 <b-card
-                        border-variant="secondary"
                         header="Delta sur 1 heure"
-                        header-border-variant="secondary"
                         align="center"
                 >
                     <b-card-text class="">
@@ -60,7 +52,7 @@
             </b-col>
         </b-row>
         <br><br>
-        <b-row align-v="center" class="text-center" v-if="window.width>windowLimitWidth">
+        <b-row class="m-4" v-if="window.width>windowLimitWidth">
                 <SnowChart :dataSnowChart="series_snow"/>
         </b-row>
 
