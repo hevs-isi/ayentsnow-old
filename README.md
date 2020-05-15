@@ -1,7 +1,4 @@
-<<<<<<< HEAD
 # ayentsnow
-=======
-# watermon_app
 
 ## Project setup
 ```
@@ -25,4 +22,3 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
->>>>>>> 8cfe99e75550e76af3a2faad703c854dd53c5f80
