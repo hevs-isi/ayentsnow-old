@@ -159,9 +159,9 @@
                 </tr>
                 <tr>
                     <th scope="row">Pralan</th>
-                    <td>4 cm</td>
-                    <td>5 cm</td>
-                    <td>6 cm</td>
+                    <td>{{last1hSnowPralan}} cm</td>
+                    <td>{{last30minSnowPralan}} cm</td>
+                    <td>{{lastSnowValuePralan}} cm</td>
                 </tr>
                 <tr>
                     <th scope="row">Pro De Savioz</th>
@@ -196,9 +196,9 @@
                 </tr>
                 <tr>
                     <th scope="row">Pralan</th>
-                    <td>4 cm</td>
-                    <td>5 cm</td>
-                    <td>6 cm</td>
+                    <td>{{last1hSnowPralan}} cm</td>
+                    <td>{{last30minSnowPralan}} cm</td>
+                    <td>{{lastSnowValuePralan}} cm</td>
                 </tr>
                 <tr>
                     <th scope="row">Pro De Savioz</th>
@@ -393,6 +393,10 @@
             this.loadLastSnowDataTelecabine();
             this.load30minSnowDataTelecabine();
             this.load1hSnowDataTelecabine();
+
+            this.loadLastSnowDataPralan();
+            this.load30minSnowDataPralan();
+            this.load1hSnowDataPralan();
 
         },
         //VERY VERY important !! Destroy the timer when the user change the page
@@ -824,6 +828,53 @@
                     });
 
                     console.log(this.last1hSnowTelecabine)
+                }).catch(error => console.log(error))
+            },
+
+            //Pralan
+
+            /**
+             * load snow data Last Pralan
+             */
+            loadLastSnowDataPralan: function() {
+                Promise.all([
+                    client.query('select "payload_fields_Air humidity_value" from mqtt_consumer WHERE topic = ' + "'" + 'ayent_monitoring/devices/70b3d57ba0000bd0/up' + "'" ), // WHERE time>now()-365d
+                ]).then(parsedRes => {
+                    parsedRes.map( arr => {
+                        this.lastSnowValuePralan = arr[arr.length-1]['payload_fields_Air humidity_value'].toFixed(2); //to fixed: fix number of digit
+                    });
+
+                    console.log(this.lastSnowValuePralan)
+                }).catch(error => console.log(error))
+            },
+
+            /**
+             * load snow data 30 min ago Pralan
+             */
+            load30minSnowDataPralan: function() {
+                Promise.all([
+                    client.query('select "payload_fields_Air humidity_value" from mqtt_consumer WHERE topic = ' + "'" + 'ayent_monitoring/devices/70b3d57ba0000bd0/up' + "'" + ' AND time>now()-30m order by time asc limit 1'), // WHERE time>now()-365d
+                ]).then(parsedRes => {
+                    parsedRes.map( arr => {
+                        this.last30minSnowPralan = arr[arr.length-1]['payload_fields_Air humidity_value'].toFixed(2); //to fixed: fix number of digit
+                    });
+
+                    console.log(this.last30minSnowPralan)
+                }).catch(error => console.log(error))
+            },
+
+            /**
+             * load snow data 1 hour ago Pralan
+             */
+            load1hSnowDataPralan: function() {
+                Promise.all([
+                    client.query('select "payload_fields_Air humidity_value" from mqtt_consumer WHERE topic = ' + "'" + 'ayent_monitoring/devices/70b3d57ba0000bd0/up' + "'" + ' AND time>now()-1h order by time asc limit 1'), // WHERE time>now()-365d
+                ]).then(parsedRes => {
+                    parsedRes.map( arr => {
+                        this.last1hSnowPralan = arr[arr.length-1]['payload_fields_Air humidity_value'].toFixed(2); //to fixed: fix number of digit
+                    });
+
+                    console.log(this.last1hSnowPralan)
                 }).catch(error => console.log(error))
             },
 
