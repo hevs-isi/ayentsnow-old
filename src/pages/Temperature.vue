@@ -24,9 +24,14 @@
         <!-- dual chart small screen-->
         <div v-if="window.width<=windowLimitWidth">
             <h2>Température</h2>
-            Température actuelle du sol : {{dualFloorTemp}} °C
-            Température actuelle du capteur : {{dualSensorTemp}} °C
 
+            <b-card class="card flex-fill" header="Capteur" align="center" >
+                <b-card-text  class="h2">{{dualSensorTemp}}°C</b-card-text>
+            </b-card>
+            <br>
+            <b-card class="card flex-fill" header="Sol" align="center" >
+                <b-card-text  class="h2">{{dualFloorTemp}}°C</b-card-text>
+            </b-card>
 
         </div>
 
@@ -49,7 +54,9 @@
         <!-- battery small screen-->
         <div v-if="window.width<=windowLimitWidth">
             <h2>Niveau de Batterie</h2>
-            Niveau actuelle de batterie : {{lastBatteryValue}} V
+            <b-card class="card flex-fill" header="Actuel" align="center" >
+                <b-card-text  class="h2">{{lastBatteryValue}}V</b-card-text>
+            </b-card>
 
         </div>
 

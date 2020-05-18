@@ -153,9 +153,9 @@
                 <tbody>
                 <tr>
                     <th scope="row">Télécabine</th>
-                    <td>1 cm</td>
-                    <td>2 cm</td>
-                    <td>3 cm</td>
+                    <td>{{last1hSnowTelecabine}} cm</td>
+                    <td>{{last30minSnowTelecabine}} cm</td>
+                    <td>{{lastSnowValueTelecabine}} cm</td>
                 </tr>
                 <tr>
                     <th scope="row">Pralan</th>
@@ -190,9 +190,9 @@
                 <tbody>
                 <tr>
                     <th scope="row">Télécabine</th>
-                    <td>1 cm</td>
-                    <td>2 cm</td>
-                    <td>3 cm</td>
+                    <td>{{last1hSnowTelecabine}} cm</td>
+                    <td>{{last30minSnowTelecabine}} cm</td>
+                    <td>{{lastSnowValueTelecabine}} cm</td>
                 </tr>
                 <tr>
                     <th scope="row">Pralan</th>
@@ -361,7 +361,17 @@
                 lastTempPralan:"",
                 lastTempProDeSavioz:"",
     //-----------Neige
+                lastSnowValueTelecabine:"",
+                last30minSnowTelecabine:"",
+                last1hSnowTelecabine:"",
 
+                lastSnowValuePralan:"",
+                last30minSnowPralan:"",
+                last1hSnowPralan:"",
+
+                lastSnowValueProDeSavioz:"",
+                last30minSnowProDeSavioz:"",
+                last1hSnowProDeSavioz:"",
 
             }
 
@@ -378,6 +388,11 @@
         },
         mounted() {
             this.dualData(queryTempTelecabine, queryTempPralan,queryTempProDeSavioz)
+
+            //snow
+            this.loadLastSnowDataTelecabine();
+            this.load30minSnowDataTelecabine();
+            this.load1hSnowDataTelecabine();
 
         },
         //VERY VERY important !! Destroy the timer when the user change the page
@@ -766,8 +781,51 @@
             },
 
     //--------------------------------END CHART TEMPERATURE-------------------------------------------------------------
-    //-------------------------------START CHART NEIGE------------------------------------------------------------------
+    //-------------------------------START ARRAY NEIGE------------------------------------------------------------------
+            /**
+             * load snow data Last Télécabine
+             */
+            loadLastSnowDataTelecabine: function() {
+                Promise.all([
+                    client.query('select "payload_fields_Air humidity_value" from mqtt_consumer WHERE topic = ' + "'" + 'ayent_monitoring/devices/ambient_sensor_2/up' + "'" ), // WHERE time>now()-365d
+                ]).then(parsedRes => {
+                    parsedRes.map( arr => {
+                        this.lastSnowValueTelecabine = arr[arr.length-1]['payload_fields_Air humidity_value'].toFixed(2); //to fixed: fix number of digit
+                    });
 
+                    console.log(this.lastSnowValueTelecabine)
+                }).catch(error => console.log(error))
+            },
+
+            /**
+             * load snow data 30 min ago Télécabine
+             */
+            load30minSnowDataTelecabine: function() {
+                Promise.all([
+                    client.query('select "payload_fields_Air humidity_value" from mqtt_consumer WHERE topic = ' + "'" + 'ayent_monitoring/devices/ambient_sensor_2/up' + "'" + ' AND time>now()-30m order by time asc limit 1'), // WHERE time>now()-365d
+                ]).then(parsedRes => {
+                    parsedRes.map( arr => {
+                        this.last30minSnowTelecabine = arr[arr.length-1]['payload_fields_Air humidity_value'].toFixed(2); //to fixed: fix number of digit
+                    });
+
+                    console.log(this.last30minSnowTelecabine)
+                }).catch(error => console.log(error))
+            },
+
+            /**
+             * load snow data 1 hour ago Télécabine
+             */
+            load1hSnowDataTelecabine: function() {
+                Promise.all([
+                    client.query('select "payload_fields_Air humidity_value" from mqtt_consumer WHERE topic = ' + "'" + 'ayent_monitoring/devices/ambient_sensor_2/up' + "'" + ' AND time>now()-1h order by time asc limit 1'), // WHERE time>now()-365d
+                ]).then(parsedRes => {
+                    parsedRes.map( arr => {
+                        this.last1hSnowTelecabine = arr[arr.length-1]['payload_fields_Air humidity_value'].toFixed(2); //to fixed: fix number of digit
+                    });
+
+                    console.log(this.last1hSnowTelecabine)
+                }).catch(error => console.log(error))
+            },
 
         },
     }
