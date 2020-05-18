@@ -12,11 +12,11 @@
 
             <b-col cols="2" >
                 <b-card class="card flex-fill" header="Capteur" align="center" >
-                    <b-card-text  class="h1">{{dualSensorTemp}}°C</b-card-text>
+                    <b-card-text  class="h2">{{dualSensorTemp}}°C</b-card-text>
                 </b-card>
                 <br>
                 <b-card class="card flex-fill" header="Sol" align="center" >
-                    <b-card-text  class="h1">{{dualFloorTemp}}°C</b-card-text>
+                    <b-card-text  class="h2">{{dualFloorTemp}}°C</b-card-text>
                 </b-card>
 
             </b-col>
@@ -26,6 +26,8 @@
             <h2>Température</h2>
             Température actuelle du sol : {{dualFloorTemp}} °C
             Température actuelle du capteur : {{dualSensorTemp}} °C
+
+
         </div>
 
 
@@ -358,11 +360,14 @@
                      dualSensorTemp:"",
 
                      //----------Window
+                     //----------Window
                      window:{
                          width:0,
                          height:0,
                      },
-                     windowLimitWidth : 700,
+                     windowLimitWidth : 900,
+
+
                  }
              },
          }
@@ -379,4 +384,5 @@
          body{
              background-color: #f4f7fc;
          }
+
      </style>

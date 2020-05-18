@@ -352,7 +352,7 @@
                     width:0,
                     height:0,
                 },
-                windowLimitWidth : 700,
+                windowLimitWidth : 900,
     //-----------Temperature
                 series_dual:[{
                     data: [],

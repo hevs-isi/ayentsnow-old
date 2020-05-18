@@ -266,7 +266,7 @@
                     width:0,
                     height:0,
                 },
-                windowLimitWidth : 700,
+                windowLimitWidth : 900,
             }
 
         }
